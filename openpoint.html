@@ -27,6 +27,7 @@
     transition: color .2s ease;
   }
   .back-link:hover{ color: var(--accent); }
+  .project-head{ max-width: none; margin-bottom: 0; }
   .project-hero h1{
     font-size: clamp(2.4rem, 6vw, 4.6rem);
     font-weight: 400;
@@ -41,7 +42,6 @@
     margin: 0 0 48px;
   }
   .project-hero-img{
-    border-top: 1px solid var(--line);
     background: var(--bg-raised);
     margin-top: 0;
   }
@@ -76,9 +76,8 @@
   .story-section{
     padding-bottom: 72px;
     margin-bottom: 72px;
-    border-bottom: 1px solid var(--line);
   }
-  .story-section:last-child{ border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .story-section:last-child{ margin-bottom: 0; padding-bottom: 0; }
   .story-section h2{
     font-size: 1.6rem;
     font-weight: 400;
@@ -94,27 +93,37 @@
   .story-section p{ color: var(--ink-soft); font-size: .96rem; margin: 0 0 18px; }
   .story-section strong{ color: var(--ink); font-weight: 500; }
 
-  .stat-row{ display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); margin: 28px 0 8px; }
-  .stat-card{ padding: 22px 20px 0; border-right: 1px solid var(--line); }
-  .stat-card:last-child{ border-right: none; }
+  .stat-row{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 28px 0 8px; }
+  .stat-card{ background: var(--bg-raised); padding: 20px 22px; border-radius: 4px; }
   .stat-card strong{ display: block; font-family: 'Inter', sans-serif; font-size: 1.6rem; font-weight: 400; color: var(--accent); margin-bottom: 8px; }
   .stat-card span{ font-size: .8rem; color: var(--ink-faint); }
 
-  .pain-grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin: 24px 0; background: var(--line); border: 1px solid var(--line); }
-  .pain-card{ background: var(--bg); padding: 22px 24px; font-size: .9rem; color: var(--ink-soft); }
+  .pain-grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+  .pain-card{ background: var(--bg-raised); padding: 22px 24px; border-radius: 4px; font-size: .9rem; color: var(--ink-soft); }
   .pain-card strong{ display: block; color: var(--ink); margin-bottom: 6px; font-size: .92rem; font-weight: 500; }
 
-  .quote-block{
-    border-left: 2px solid var(--accent);
-    padding: 4px 0 4px 24px;
-    margin: 24px 0;
+  .quote-block{ margin: 24px 0; display: flex; }
+  .quote-bubble{
+    position: relative;
+    background: var(--bg-raised);
+    border-radius: 4px 16px 16px 16px;
+    padding: 18px 24px;
+    max-width: 62ch;
   }
-  .quote-block p{ color: var(--ink); font-size: 1.06rem; font-weight: 400; line-height: 1.7; margin: 0; font-style: italic; }
+  .quote-bubble::before{
+    content: '';
+    position: absolute;
+    top: 0; left: -9px;
+    width: 16px; height: 16px;
+    background: var(--bg-raised);
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+  }
+  .quote-bubble p{ color: var(--ink); font-size: 1.02rem; font-weight: 400; line-height: 1.7; margin: 0; font-style: normal; }
 
   .hmw-block{
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 28px 0;
+    background: var(--accent-soft);
+    border-radius: 4px;
+    padding: 28px 32px;
     margin: 24px 0;
     font-size: 1.3rem;
     font-weight: 400;
@@ -138,18 +147,16 @@
     font-size: .86rem;
     color: var(--ink-faint);
     margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
   }
   .highlight-pain strong{ color: var(--accent); font-weight: 500; }
 
   .ia-flow{ display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 24px 0; }
-  .ia-pill{ font-size: .88rem; font-weight: 500; letter-spacing: .02em; padding: 8px 0; border-bottom: 1px solid var(--line-strong); }
+  .ia-pill{ font-size: .88rem; font-weight: 500; letter-spacing: .02em; padding: 8px 16px; background: var(--bg-raised); border-radius: 20px; }
   .ia-arrow{ color: var(--ink-faint); }
 
-  .reflect-list{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
-  .reflect-list li{ padding: 28px 0; border-top: 1px solid var(--line); }
-  .reflect-list li:first-child{ border-top: none; padding-top: 0; }
+  .reflect-list{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .reflect-list li{ padding: 20px 0; }
+  .reflect-list li:first-child{ padding-top: 0; }
   .reflect-list strong{ display: block; margin-bottom: 10px; font-size: 1rem; font-weight: 500; color: var(--ink); }
   .reflect-list p{ margin: 0; }
 
@@ -168,8 +175,6 @@
     }
     .project-toc a{ border-left: none; border-bottom: 2px solid var(--line); padding: 4px 0; }
     .stat-row{ grid-template-columns: 1fr; }
-    .stat-card{ border-right: none; border-top: 1px solid var(--line); padding-top: 18px; }
-    .stat-card:first-child{ border-top: none; }
     .pain-grid{ grid-template-columns: 1fr; }
   }
 </style>
@@ -199,8 +204,10 @@
   <section class="project-hero">
     <div class="wrap">
       <a href="index.html#work" class="back-link">← 回作品集</a>
-      <p class="kicker">UI／UX 設計</p>
-      <h1>OPENPOINT Redesign</h1>
+      <div class="section-head project-head">
+        <p class="kicker">UI／UX 設計</p>
+        <h1>OPENPOINT Redesign</h1>
+      </div>
       <p class="project-lede">在兼顧品牌曝光的前提下，我和團隊重新設計了 OPENPOINT 的點數、票券與支付體驗，讓每一次消費都能更輕鬆兌換價值。以下是我在這個專案中實際經歷的研究過程、設計決策與反思。</p>
 
       <div class="case-meta">
@@ -262,19 +269,25 @@
           <h3>1. 導覽與資訊架構混亂、廣告干擾操作</h3>
           <p>App 導覽混亂、資訊架構複雜、廣告干擾操作，且功能名詞定義重複或不好理解，使用者難以快速找到目標服務；品牌商品資訊又存在於首頁各區塊，與功能型資訊混合呈現，使用者無法完整接收品牌訊息。</p>
           <div class="quote-block">
-            <p>一進 APP 就跳出廣告，首頁也是一堆商品廣告，想找的服務卻藏得很深，我的常用功能甚至不到一行，每次用都十分火大。</p>
+            <div class="quote-bubble">
+              <p>一進 APP 就跳出廣告，首頁也是一堆商品廣告，想找的服務卻藏得很深，我的常用功能甚至不到一行，每次用都十分火大。</p>
+            </div>
           </div>
 
           <h3>2. 商品探索與票券兌換體驗不佳</h3>
           <p>票券入口層級過深且分類複雜，使用者不清楚從哪裡購買與使用；推薦內容又偏熱門導向、缺乏個人化，降低了商品兌換或購買的意願。</p>
           <div class="quote-block">
-            <p>首頁的資訊都不是我喜歡的，希望可以讓系統推薦我最常兌換的東西。</p>
+            <div class="quote-bubble">
+              <p>首頁的資訊都不是我喜歡的，希望可以讓系統推薦我最常兌換的東西。</p>
+            </div>
           </div>
 
           <h3>3. 支付流程動線不佳，與票券使用缺乏整合</h3>
           <p>App 內支付方式眾多，卻無法在點開前預覽各支付方式的餘額；系統會預設上一次的支付方式，如果要切換必須退出重新操作，動線不佳；也無法在結帳流程中直接兌換票券。</p>
           <div class="quote-block">
-            <p>支付方式太多，每次都要切來切去，也沒辦法在外部看到每種支付方式還剩多少錢。</p>
+            <div class="quote-bubble">
+              <p>支付方式太多，每次都要切來切去，也沒辦法在外部看到每種支付方式還剩多少錢。</p>
+            </div>
           </div>
         </section>
 
