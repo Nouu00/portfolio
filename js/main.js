@@ -27,7 +27,7 @@ mainNav.querySelectorAll('a').forEach(link => {
 });
 
 // Reveal on scroll
-const revealEls = document.querySelectorAll('.reveal');
+const revealEls = document.querySelectorAll('.reveal, .reveal-blur');
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries) => {
     entries.forEach(entry => {

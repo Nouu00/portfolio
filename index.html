@@ -8,21 +8,22 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎨</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<div class="grain" aria-hidden="true"></div>
 <a class="skip-link" href="#main">跳到主要內容</a>
 
 <header class="site-header" id="siteHeader">
   <div class="wrap header-inner">
-    <a href="#top" class="brand">楊芷翎 <span>YZL</span></a>
+    <a href="#top" class="brand">Yang Zhi Ling</a>
     <nav class="main-nav" id="mainNav">
-      <a href="#about">關於我</a>
-      <a href="#work">作品</a>
-      <a href="#experience">經歷</a>
-      <a href="#contact">聯絡</a>
+      <a href="#about"><span>01</span> 關於我</a>
+      <a href="#work"><span>02</span> 作品</a>
+      <a href="#experience"><span>03</span> 經歷</a>
+      <a href="#contact"><span>04</span> 聯絡</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -34,98 +35,97 @@
 
   <!-- HERO -->
   <section class="hero" id="top">
+    <svg class="hero-line" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M -50,420 C 250,80 700,60 1250,260" />
+    </svg>
     <div class="wrap hero-inner">
-      <div class="hero-text reveal">
-        <p class="eyebrow">UI / UX Designer · Visual Designer</p>
-        <h1>嗨，我是楊芷翎<br>Yang Zhi Ling</h1>
-        <p class="hero-desc">
-          喜歡把複雜的資訊整理成清晰易懂的內容。曾參與設計系統維護、UX 專案、產品 Redesign 與視覺設計，
-          希望能透過跨領域的能力，協助團隊從研究、設計到溝通，打造兼顧商業目標與使用者體驗的產品。
+      <p class="eyebrow reveal">UI / UX Designer — Visual Designer</p>
+      <h1 class="hero-name reveal-blur">
+        <span class="hero-name-zh">楊芷翎</span>
+        <span class="hero-name-en">Yang&nbsp;Zhi&nbsp;Ling</span>
+      </h1>
+
+      <div class="hero-row">
+        <div class="hero-photo reveal">
+          <img src="assets/photo.jpg" alt="楊芷翎肖像照" width="240" height="240" loading="eager">
+        </div>
+        <p class="hero-desc reveal">
+          喜歡把複雜的資訊整理成清晰易懂的內容。曾參與設計系統維護、UX 專案、產品 Redesign 與視覺設計，希望能透過跨領域的能力，協助團隊從研究、設計到溝通，打造兼顧商業目標與使用者體驗的產品。
         </p>
-        <div class="hero-cta">
-          <a href="#work" class="btn btn-primary">看看作品</a>
-          <a href="#contact" class="btn btn-ghost">聯絡我</a>
+        <div class="hero-links reveal">
+          <a href="#work" class="link-arrow">看看作品 <i>→</i></a>
+          <a href="#contact" class="link-arrow">聯絡我 <i>→</i></a>
         </div>
-        <ul class="hero-meta">
-          <li>📍 國立政治大學 數位內容所</li>
-          <li>✉️ Loucked66@gmail.com</li>
-        </ul>
-      </div>
-      <div class="hero-photo reveal">
-        <div class="photo-frame">
-          <img src="assets/photo.jpg" alt="楊芷翎肖像照" width="600" height="600" loading="eager">
-        </div>
-        <div class="photo-badge">互動設計 × 視覺設計</div>
       </div>
     </div>
   </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>UX RESEARCH</span><i>·</i><span>UI DESIGN</span><i>·</i><span>FIGMA</span><i>·</i><span>DESIGN SYSTEM</span><i>·</i><span>PRODUCT REDESIGN</span><i>·</i><span>ILLUSTRATOR</span><i>·</i><span>BLENDER</span><i>·</i><span>MOTION</span><i>·</i>
+      <span>UX RESEARCH</span><i>·</i><span>UI DESIGN</span><i>·</i><span>FIGMA</span><i>·</i><span>DESIGN SYSTEM</span><i>·</i><span>PRODUCT REDESIGN</span><i>·</i><span>ILLUSTRATOR</span><i>·</i><span>BLENDER</span><i>·</i><span>MOTION</span><i>·</i>
+    </div>
+  </div>
 
   <!-- ABOUT -->
   <section class="section" id="about">
     <div class="wrap">
       <div class="section-head reveal">
-        <p class="kicker">關於我</p>
-        <h2>研究與設計並重，<br>把使用者的聲音變成看得懂的設計決策</h2>
+        <p class="kicker">01 — 關於我</p>
+        <h2 class="reveal-blur">研究與設計並重，把使用者的<br>聲音變成看得懂的設計決策</h2>
       </div>
 
-      <div class="skills-grid reveal">
-        <div class="skill-card">
-          <h3>互動設計 ・ 使用者研究</h3>
-          <p>Figma、FigJam、Miro</p>
+      <div class="spec-list reveal">
+        <div class="spec-row">
+          <span class="spec-label">互動設計・使用者研究</span>
+          <span class="spec-value">Figma　FigJam　Miro</span>
         </div>
-        <div class="skill-card">
-          <h3>平面設計</h3>
-          <p>Illustrator、Photoshop、InDesign</p>
+        <div class="spec-row">
+          <span class="spec-label">平面設計</span>
+          <span class="spec-value">Illustrator　Photoshop　InDesign</span>
         </div>
-        <div class="skill-card">
-          <h3>立體建模</h3>
-          <p>Maya、Blender</p>
+        <div class="spec-row">
+          <span class="spec-label">立體建模</span>
+          <span class="spec-value">Maya　Blender</span>
         </div>
-        <div class="skill-card">
-          <h3>影音製作</h3>
-          <p>Premiere Pro、After Effects</p>
+        <div class="spec-row">
+          <span class="spec-label">影音製作</span>
+          <span class="spec-value">Premiere Pro　After Effects</span>
         </div>
       </div>
 
-      <div class="awards reveal">
+      <div class="spec-list spec-list-awards reveal">
         <p class="awards-label">Awards</p>
-        <div class="awards-list">
-          <div class="award-item">
-            <strong>第九屆兩岸新銳設計競賽・華燦獎</strong>
-            <span>三等獎</span>
-          </div>
-          <div class="award-item">
-            <strong>2025 金點新秀贊助特別獎</strong>
-            <span>入圍</span>
-          </div>
-          <div class="award-item">
-            <strong>2025 放視大賞</strong>
-            <span>入圍</span>
-          </div>
+        <div class="spec-row">
+          <span class="spec-label">第九屆兩岸新銳設計競賽・華燦獎</span>
+          <span class="spec-value accent">三等獎</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">2025 金點新秀贊助特別獎</span>
+          <span class="spec-value accent">入圍</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">2025 放視大賞</span>
+          <span class="spec-value accent">入圍</span>
         </div>
       </div>
     </div>
   </section>
 
   <!-- WORK -->
-  <section class="section section-alt" id="work">
+  <section class="section" id="work">
     <div class="wrap">
       <div class="section-head reveal">
-        <p class="kicker">精選作品</p>
-        <h2>Selected Work</h2>
+        <p class="kicker">02 — 精選作品</p>
+        <h2 class="reveal-blur">Selected Work</h2>
       </div>
 
       <!-- PROJECT 1: OPENPOINT -->
       <article class="case-study reveal">
-        <a class="case-media case-media-link" href="openpoint.html" aria-label="查看 OPENPOINT Redesign 完整案例">
-          <img src="assets/openpoint-hero.jpg" alt="OPENPOINT App 改版前後介面比較" loading="lazy">
-        </a>
+        <div class="case-index">01</div>
         <div class="case-body">
-          <div class="case-tags">
-            <span class="tag">UX Research</span>
-            <span class="tag">Product Redesign</span>
-            <span class="tag">UI Design</span>
-          </div>
+          <div class="case-tags"><span>UX Research</span><span>Product Redesign</span><span>UI Design</span></div>
           <h3><a href="openpoint.html" class="case-title-link">OPENPOINT Redesign</a></h3>
           <p class="case-lede">在兼顧品牌曝光的前提下，重新設計 OPENPOINT 的點數、票券與支付體驗，讓每一次消費都能更輕鬆兌換價值。</p>
 
@@ -137,21 +137,18 @@
 
           <p class="case-summary">從近一年的 854 則使用者負評出發，我和團隊一起挖掘出「資訊架構混亂」「點數與票券使用缺乏整合」「支付流程動線不佳」等核心問題，並在兼顧品牌曝光的前提下重整資訊架構、設計新的首頁、品牌館、付款碼與票券兌換體驗，再透過可用性測試驗證與迭代。這裡分享的是我在整個專案中實際的研究過程、設計決策與反思。</p>
 
-          <a href="openpoint.html" class="btn btn-primary case-cta">查看完整案例研究 →</a>
+          <a href="openpoint.html" class="link-arrow">查看完整案例研究 <i>→</i></a>
         </div>
+        <a class="case-media case-media-link" href="openpoint.html" aria-label="查看 OPENPOINT Redesign 完整案例">
+          <img src="assets/openpoint-hero.jpg" alt="OPENPOINT App 改版前後介面比較" loading="lazy">
+        </a>
       </article>
 
       <!-- PROJECT 2: AIdentity -->
-      <article class="case-study reverse reveal">
-        <div class="case-media">
-          <img src="assets/aidentity-banner.jpg" alt="(AI)dentity 主視覺設計" loading="lazy">
-        </div>
+      <article class="case-study reveal">
+        <div class="case-index">02</div>
         <div class="case-body">
-          <div class="case-tags">
-            <span class="tag">主視覺設計</span>
-            <span class="tag">動態影像</span>
-            <span class="tag">網站設計</span>
-          </div>
+          <div class="case-tags"><span>主視覺設計</span><span>動態影像</span><span>網站設計</span></div>
           <h3>(AI)dentity</h3>
           <p class="case-lede">第十六屆 Open HCI 人機互動工作坊主視覺設計，以「辨識」為切入，探討 AI 時代下創作者與 AI 之間逐漸模糊的身份界線。</p>
 
@@ -161,28 +158,25 @@
             <div><span>我的角色</span><strong>主視覺、標準字、動畫、社群 Banner、網站設計</strong></div>
           </div>
 
-          <div class="case-detail">
-            <p>在 AI 降低創作門檻的時代，創作者與 AI 的界線逐漸模糊。(AI)dentity 將身份視為持續被判讀與生成的過程，透過細胞、框選與 glitch 元素，呈現身份在判讀、誤判與重構之間持續流動的狀態。我負責主視覺與標準字設計、動態影像製作、社群 Banner 設計，並與視覺部、網管部夥伴協力製作活動網站，主要負責動畫設計、版面調整與活動報名區塊的規劃製作。</p>
-          </div>
+          <p class="case-summary">在 AI 降低創作門檻的時代，創作者與 AI 的界線逐漸模糊。(AI)dentity 將身份視為持續被判讀與生成的過程，透過細胞、框選與 glitch 元素，呈現身份在判讀、誤判與重構之間持續流動的狀態。我負責主視覺與標準字設計、動態影像製作、社群 Banner 設計，並與視覺部、網管部夥伴協力製作活動網站，主要負責動畫設計、版面調整與活動報名區塊的規劃製作。</p>
+        </div>
+        <div class="case-media">
+          <img src="assets/aidentity-banner.jpg" alt="(AI)dentity 主視覺設計" loading="lazy">
         </div>
       </article>
 
       <!-- PROJECT 3: 生生死死 -->
       <article class="case-study reveal">
-        <div class="case-media case-media-poster">
-          <img src="assets/poster.jpg" alt="生生死死，生生慢 主視覺海報" loading="lazy">
-        </div>
+        <div class="case-index">03</div>
         <div class="case-body">
-          <div class="case-tags">
-            <span class="tag">平面設計</span>
-            <span class="tag">海報設計</span>
-          </div>
+          <div class="case-tags"><span>平面設計</span><span>海報設計</span></div>
           <h3>生生死死，生生慢</h3>
           <p class="case-lede">國立台東大學美產系 114 級班展主視覺海報。</p>
 
-          <div class="case-detail">
-            <p>那年，跟我們同齡的學子在車禍中驟然離世，讓我第一次真切意識到死亡並非遙遠的議題，因此發想了這次視覺。以蘋果象徵生命，透過流動紋理、墨跡與朦朧空間感，呈現生命的脆弱與情緒的流動；綠色色塊則象徵生命力與希望，傳達珍惜當下、正視生命無常的理念。中／英文字體使用 Noto Serif TC。</p>
-          </div>
+          <p class="case-summary">那年，跟我們同齡的學子在車禍中驟然離世，讓我第一次真切意識到死亡並非遙遠的議題，因此發想了這次視覺。以蘋果象徵生命，透過流動紋理、墨跡與朦朧空間感，呈現生命的脆弱與情緒的流動；綠色色塊則象徵生命力與希望，傳達珍惜當下、正視生命無常的理念。中／英文字體使用 Noto Serif TC。</p>
+        </div>
+        <div class="case-media case-media-poster">
+          <img src="assets/poster.jpg" alt="生生死死，生生慢 主視覺海報" loading="lazy">
         </div>
       </article>
 
@@ -193,8 +187,8 @@
   <section class="section" id="experience">
     <div class="wrap">
       <div class="section-head reveal">
-        <p class="kicker">經歷</p>
-        <h2>Work Experience &amp; Education</h2>
+        <p class="kicker">03 — 經歷</p>
+        <h2 class="reveal-blur">Work Experience &amp; Education</h2>
       </div>
 
       <div class="timeline-cols reveal">
@@ -275,20 +269,11 @@
   <!-- CONTACT -->
   <section class="section contact-section" id="contact">
     <div class="wrap">
-      <div class="contact-inner reveal">
-        <p class="kicker">聯絡我</p>
-        <h2>一起聊聊你的專案吧</h2>
-        <p class="contact-desc">無論是產品設計、視覺設計或使用者研究相關的合作機會，都歡迎與我聯繫。</p>
-        <div class="contact-links">
-          <a href="mailto:Loucked66@gmail.com" class="contact-link">
-            <span>Email</span>
-            Loucked66@gmail.com
-          </a>
-          <a href="tel:0909626884" class="contact-link">
-            <span>Phone</span>
-            0909-626-884
-          </a>
-        </div>
+      <p class="kicker">04 — 聯絡我</p>
+      <h2 class="contact-h reveal-blur">一起聊聊<br>你的專案吧</h2>
+      <div class="contact-links reveal">
+        <a href="mailto:Loucked66@gmail.com" class="link-arrow lg">Loucked66@gmail.com <i>→</i></a>
+        <a href="tel:0909626884" class="link-arrow lg">0909-626-884 <i>→</i></a>
       </div>
     </div>
   </section>
@@ -297,8 +282,8 @@
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <p>© <span id="year"></span> Yang Zhi Ling 楊芷翎. All rights reserved.</p>
-    <a href="#top" class="back-top">回到頂端 ↑</a>
+    <p>© <span id="year"></span> Yang Zhi Ling 楊芷翎</p>
+    <a href="#top" class="back-top">TOP ↑</a>
   </div>
 </footer>
 
