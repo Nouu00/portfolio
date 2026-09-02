@@ -100,15 +100,13 @@
 
   /* logotype display */
   .logotype-card{
-    background: #fff;
-    border-radius: 4px;
-    padding: 48px 40px;
+    padding: 24px 0;
     margin: 24px 0;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .logotype-card img{ width: 100%; max-width: 460px; }
+  .logotype-card img{ width: 100%; max-width: 460px; border-radius: 0; }
 
   .callout-list{ list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
   .callout-list li{
@@ -158,11 +156,34 @@
   /* social mockup */
   .social-shot{
     margin: 24px 0;
-    border-radius: 4px;
-    overflow: hidden;
-    background: var(--bg-raised);
     max-width: 620px;
   }
+
+  /* badges / signage / print / merch / photos — shown on plain background, no card fill */
+  .asset-row{ display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; margin: 24px 0; }
+  .asset-row img{ display: block; }
+  .badge-banner{ width: 100%; max-width: 340px; margin-bottom: 4px; }
+  .logo-variants{ align-items: center; }
+  .logo-variants figure{ margin: 0; }
+  .logo-variants img{ width: 260px; max-width: 100%; border-radius: 0; }
+  .logo-variants figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); text-align: center; }
+  .badge-set img{ width: 150px; }
+  .sign-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0; }
+  .sign-grid img{ width: 100%; }
+  .sign-grid figure{ margin: 0; }
+  .sign-grid figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); text-align: center; }
+  .print-row{ display: flex; flex-wrap: wrap; gap: 32px; margin: 24px 0; align-items: flex-start; }
+  .print-row figure{ margin: 0; flex: 1 1 260px; max-width: 320px; }
+  .print-row img{ width: 100%; }
+  .print-row figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); }
+  .merch-row{ display: flex; flex-wrap: wrap; gap: 32px; margin: 24px 0; align-items: flex-end; }
+  .merch-row figure{ margin: 0; }
+  .merch-row img{ height: 220px; width: auto; max-width: 100%; }
+  .merch-row figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); }
+  .photo-row{ display: flex; flex-wrap: wrap; gap: 24px; margin: 24px 0; }
+  .photo-row figure{ margin: 0; flex: 1 1 320px; }
+  .photo-row img{ width: 100%; }
+  .photo-row figcaption{ margin-top: 10px; font-size: .86rem; color: var(--ink-soft); }
   .ext-links{ display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 20px 0 0; }
   .ext-links a{
     font-size: .92rem;
@@ -198,6 +219,9 @@
     .palette-row{ grid-template-columns: 1fr 1fr; }
     .type-row{ grid-template-columns: 1fr; }
     .element-grid{ grid-template-columns: 1fr; }
+    .sign-grid{ grid-template-columns: 1fr 1fr; }
+    .badge-set img{ width: 120px; }
+    .merch-row img{ height: 160px; }
   }
 </style>
 </head>
@@ -253,8 +277,13 @@
         <a href="#concept">設計概念</a>
         <a href="#logotype">標準字設計</a>
         <a href="#system">設計系統</a>
+        <a href="#badges">識別證設計</a>
+        <a href="#signage">現場指引與標示</a>
+        <a href="#print">活動印刷物</a>
+        <a href="#merch">紀念品設計</a>
         <a href="#motion">動態影像</a>
         <a href="#site">網站與社群</a>
+        <a href="#photos">花絮合照</a>
         <a href="#reflection">心得與反思</a>
       </nav>
 
@@ -267,6 +296,11 @@
             <div class="stat-card"><strong>07/16－07/19</strong><span>正式工作坊日期</span></div>
             <div class="stat-card"><strong>台灣大學</strong><span>學新館，活動場地</span></div>
             <div class="stat-card"><strong>5 人</strong><span>視覺團隊人數</span></div>
+          </div>
+          <div class="stat-row">
+            <div class="stat-card"><strong>64 人</strong><span>今年報名人數</span></div>
+            <div class="stat-card"><strong>18 所</strong><span>參與學校數</span></div>
+            <div class="stat-card"><strong>44 個</strong><span>涵蓋系所數</span></div>
           </div>
         </section>
 
@@ -286,6 +320,11 @@
             <li><b>dentity</b><span>接續使用經典襯線體，維持人類手寫般的溫度，但在筆畫交界處加入細微的錯位與斷裂，暗示這個「人」的身份也正被悄悄地改寫。</span></li>
             <li><b>&gt; OPEN HCI'26</b><span>頂部以電光藍的像素／等寬字體呈現，模仿終端機指令列的樣式，強化整體視覺與「AI、程式」之間的連結。</span></li>
           </ul>
+          <p>除了主色版本，我也整理了單色與線稿版的標準字，方便在印刷物、單色物件或需要去背使用的情境下維持一致的識別度。</p>
+          <div class="asset-row logo-variants">
+            <figure><img src="assets/aidentity-logotype-mono.png" alt="(AI)dentity 標準字單色版"><figcaption>單色版</figcaption></figure>
+            <figure><img src="assets/aidentity-logotype-outline.png" alt="(AI)dentity 標準字線稿版"><figcaption>線稿版</figcaption></figure>
+          </div>
         </section>
 
         <section class="story-section" id="system">
@@ -307,18 +346,62 @@
           </div>
           <div class="type-row">
             <div class="type-card">
-              <span>標題／標準字</span>
-              <strong>襯線體 + 像素雜訊紋理</strong>
+              <span>中文字體</span>
+              <strong>Roboto、unifont</strong>
             </div>
             <div class="type-card mono">
-              <span>輔助／指令列風格</span>
-              <strong>&gt; Monospace Pixel Type</strong>
+              <span>英文字體</span>
+              <strong>Pixelify Sans</strong>
             </div>
           </div>
           <div class="element-grid">
             <div class="element-card"><strong>細胞圖形</strong>以圓點、氣泡狀圖形象徵持續分裂、增生的身份樣態，散佈於版面各處。</div>
             <div class="element-card"><strong>框選標記</strong>以偵測框與 <code>??</code> 標籤模擬 AI 辨識介面，呼應「判讀」的主題。</div>
             <div class="element-card"><strong>Glitch 錯位</strong>局部像素化與筆畫斷裂，呈現辨識失準、身份被重構的瞬間。</div>
+          </div>
+        </section>
+
+        <section class="story-section" id="badges">
+          <h2>識別證設計</h2>
+          <p>現場的識別證是參加者對整套視覺的第一個實際接觸點，我延續標準字與螢光綠、電光藍的配色，依身份區分幹部、學員、講師三種名牌，讓工作人員能一眼辨識彼此的角色。</p>
+          <div class="asset-row badge-set">
+            <img class="badge-banner" src="assets/aidentity-banner-badge.png" alt="(AI)dentity 人機互動工作坊識別證頭版設計">
+          </div>
+          <div class="asset-row badge-set">
+            <img src="assets/aidentity-badge-staff.png" alt="幹部識別證：蘇毓心，總召">
+            <img src="assets/aidentity-badge-member.png" alt="學員識別證：沈采葳，第七組，國立臺北科技大學">
+            <img src="assets/aidentity-badge-lecturer.png" alt="講師識別證：鄭龍磻">
+          </div>
+        </section>
+
+        <section class="story-section" id="signage">
+          <h2>現場指引與標示</h2>
+          <p>工作坊為期四天，場地內有報到、幹部休息室、成果展等多個機能空間，我設計了一套現場指引與標示系統，用同樣的圖形語彙（細胞圖形、框選標記）延伸成樓層指引、方向箭頭與空間標示，讓學員能快速找到路。</p>
+          <div class="sign-grid">
+            <figure><img src="assets/aidentity-sign-5f.png" alt="樓層指引：在 5F"><figcaption>樓層指引</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-arrow.png" alt="方向指引：在這邊"><figcaption>方向指引</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-checkin.png" alt="學員報到標示"><figcaption>學員報到</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-exhibition.png" alt="期末成果展標示"><figcaption>期末成果展</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-lounge.png" alt="幹部休息室標示"><figcaption>幹部休息室</figcaption></figure>
+          </div>
+        </section>
+
+        <section class="story-section" id="print">
+          <h2>活動印刷物</h2>
+          <p>議程海報整理了前置工作坊與正式工作坊四天的完整時間軸，方便學員隨時查閱；期末成果展則設計了投票根，讓現場觀眾能撕下票根為喜歡的組別投票，把整套識別延伸到活動的互動環節。</p>
+          <div class="print-row">
+            <figure><img src="assets/aidentity-schedule.png" alt="(AI)dentity 議程總覽海報"><figcaption>議程總覽海報</figcaption></figure>
+            <figure><img src="assets/aidentity-voting.png" alt="期末成果展投票根設計"><figcaption>期末成果展投票根</figcaption></figure>
+          </div>
+        </section>
+
+        <section class="story-section" id="merch">
+          <h2>紀念品設計</h2>
+          <p>我也設計了給學員的紀念品：一款可以放入合照的壓克力相框吊飾、一款印有活動識別的圓形吊飾，以及包裝用的夾鏈袋，讓整套視覺延伸到參加者能實際帶走的物件上。</p>
+          <div class="merch-row">
+            <figure><img src="assets/aidentity-charm1.png" alt="相框式壓克力吊飾"><figcaption>相框壓克力吊飾</figcaption></figure>
+            <figure><img src="assets/aidentity-charm2.png" alt="圓形識別壓克力吊飾"><figcaption>圓形壓克力吊飾</figcaption></figure>
+            <figure><img src="assets/aidentity-bag.png" alt="紀念品夾鏈袋包裝"><figcaption>紀念品包裝</figcaption></figure>
           </div>
         </section>
 
@@ -340,6 +423,15 @@
             <a href="https://www.2026.openhci.com/" target="_blank" rel="noopener">官方網站 ↗</a>
             <a href="https://www.instagram.com/open.hci/" target="_blank" rel="noopener">Instagram ↗</a>
             <a href="https://www.facebook.com/openhci/?locale=zh_TW" target="_blank" rel="noopener">Facebook ↗</a>
+          </div>
+        </section>
+
+        <section class="story-section" id="photos">
+          <h2>花絮合照</h2>
+          <p>這次工作坊也讓我認識了很多一起努力的夥伴，留下幾張活動花絮作紀念。</p>
+          <div class="photo-row">
+            <figure><img src="assets/aidentity-group1.jpg" alt="與政大數位內容碩士學程幹部們的合照"><figcaption>和一起參加這次活動的政大數位內容幹部們合照，我們系上感情很好。</figcaption></figure>
+            <figure><img src="assets/aidentity-group2.jpg" alt="與視覺行銷部夥伴的合照"><figcaption>和視覺行銷部的夥伴合照。</figcaption></figure>
           </div>
         </section>
 
