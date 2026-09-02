@@ -262,7 +262,7 @@ a{ color: inherit; text-decoration: none; }
 .contact-head{ max-width: none; margin-bottom: 0; }
 
 /* ---------- Spec list (skills / awards) ---------- */
-.spec-list{ margin-bottom: 32px; }
+.spec-list{ margin-bottom: 32px; max-width: 780px; }
 .spec-list-awards{ margin-bottom: 0; }
 .awards-label{
   font-weight: 500;
@@ -325,12 +325,36 @@ a{ color: inherit; text-decoration: none; }
 }
 
 .case-media{
-  border: 1px solid var(--line);
   overflow: hidden;
   background: var(--bg-raised);
   border-radius: 6px;
 }
 .case-media-poster{ max-width: 320px; }
+.lightbox-trigger{ cursor: zoom-in; }
+body.lightbox-lock{ overflow: hidden; }
+.lightbox-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,18,.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  z-index: 9999;
+  cursor: zoom-out;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s ease;
+}
+.lightbox-overlay.open{ opacity: 1; visibility: visible; }
+.lightbox-overlay img{
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  border-radius: 4px;
+  cursor: default;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
 .case-media img{
   width: 100%;
   transition: transform .6s ease;

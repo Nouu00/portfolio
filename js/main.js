@@ -41,3 +41,34 @@ if ('IntersectionObserver' in window) {
 } else {
   revealEls.forEach(el => el.classList.add('in'));
 }
+
+// Lightbox for zoomable images
+const lightboxImgs = document.querySelectorAll('.lightbox-trigger');
+if (lightboxImgs.length) {
+  const overlay = document.createElement('div');
+  overlay.className = 'lightbox-overlay';
+  const overlayImg = document.createElement('img');
+  overlay.appendChild(overlayImg);
+  document.body.appendChild(overlay);
+
+  const openLightbox = (src, alt) => {
+    overlayImg.src = src;
+    overlayImg.alt = alt || '';
+    overlay.classList.add('open');
+    document.body.classList.add('lightbox-lock');
+  };
+  const closeLightbox = () => {
+    overlay.classList.remove('open');
+    document.body.classList.remove('lightbox-lock');
+  };
+
+  lightboxImgs.forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.alt));
+  });
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeLightbox();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+}
