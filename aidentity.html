@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>(AI)dentity｜楊芷翎 Yang Zhi Ling</title>
+<meta name="description" content="(AI)dentity — 第十六屆 Open HCI 人機互動工作坊主視覺設計案例，楊芷翎的標準字、設計系統與動態影像創作過程。">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .project-hero{
+    padding: 168px 0 0;
+  }
+  .back-link{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-faint);
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    transition: color .2s ease;
+  }
+  .back-link:hover{ color: var(--accent); }
+  .project-head{ max-width: none; margin-bottom: 0; }
+  .project-hero h1{
+    font-size: clamp(2.4rem, 6vw, 4.6rem);
+    font-weight: 400;
+    letter-spacing: -.01em;
+    margin: 20px 0 28px;
+    line-height: 1.05;
+  }
+  .project-lede{
+    font-size: 1.02rem;
+    color: var(--ink-soft);
+    max-width: 60ch;
+    margin: 0 0 32px;
+  }
+  .project-hero-img{
+    background: var(--bg-raised);
+    margin-top: 0;
+  }
+  .project-hero-img .wrap{ max-width: 760px; }
+  .project-hero-img img{ border-radius: 8px; }
+  .project-body{ padding: 64px 0 96px; }
+  .project-grid{
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 64px;
+  }
+  .project-toc{
+    position: sticky;
+    top: 110px;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .project-toc a{
+    padding: 9px 0;
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .06em;
+    color: var(--ink-faint);
+    border-left: 1px solid var(--line);
+    padding-left: 18px;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .project-toc a:hover{ color: var(--ink-soft); }
+
+  .story-section{
+    padding-bottom: 48px;
+    margin-bottom: 48px;
+  }
+  .story-section:last-child{ margin-bottom: 0; padding-bottom: 0; }
+  .story-section h2{
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin: 0 0 24px;
+    letter-spacing: -.005em;
+  }
+  .story-section h3{
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 32px 0 12px;
+    color: var(--ink);
+  }
+  .story-section p{ color: var(--ink-soft); font-size: .96rem; margin: 0 0 18px; }
+  .story-section strong{ color: var(--ink); font-weight: 500; }
+
+  .stat-row{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 28px 0 8px; }
+  .stat-card{ background: var(--bg-raised); padding: 20px 22px; border-radius: 4px; }
+  .stat-card strong{ display: block; font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 400; color: var(--accent); margin-bottom: 8px; }
+  .stat-card span{ font-size: .8rem; color: var(--ink-faint); }
+
+  /* logotype display */
+  .logotype-card{
+    background: #fff;
+    border-radius: 4px;
+    padding: 48px 40px;
+    margin: 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logotype-card img{ width: 100%; max-width: 460px; }
+
+  .callout-list{ list-style: none; padding: 0; margin: 20px 0; display: flex; flex-direction: column; gap: 14px; }
+  .callout-list li{
+    display: flex;
+    gap: 14px;
+    font-size: .92rem;
+    color: var(--ink-soft);
+  }
+  .callout-list b{
+    flex: none;
+    color: var(--ink);
+    font-weight: 500;
+    min-width: 88px;
+  }
+
+  /* design system palette */
+  .palette-row{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+  .swatch{ border-radius: 4px; overflow: hidden; background: var(--bg-raised); }
+  .swatch-color{ height: 64px; }
+  .swatch-label{ padding: 12px 14px; }
+  .swatch-label strong{ display: block; font-size: .86rem; font-weight: 500; color: var(--ink); }
+  .swatch-label span{ font-family: 'Inter', sans-serif; font-size: .76rem; color: var(--ink-faint); letter-spacing: .03em; }
+
+  .type-row{ display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+  .type-card{ background: var(--bg-raised); padding: 20px 22px; border-radius: 4px; }
+  .type-card span{ display: block; font-size: .78rem; color: var(--ink-faint); margin-bottom: 10px; }
+  .type-card strong{ font-size: 1.1rem; font-weight: 500; color: var(--ink); }
+  .type-card.mono strong{ font-family: 'Inter', monospace; letter-spacing: .02em; }
+
+  .element-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+  .element-card{ background: var(--bg-raised); padding: 20px 22px; border-radius: 4px; font-size: .88rem; color: var(--ink-soft); }
+  .element-card strong{ display: block; color: var(--ink); margin-bottom: 6px; font-size: .9rem; font-weight: 500; }
+
+  /* video embed */
+  .video-frame{
+    position: relative;
+    width: 100%;
+    max-width: 640px;
+    aspect-ratio: 16 / 9;
+    background: var(--bg-raised);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 24px 0;
+  }
+  .video-frame iframe{ position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  /* social mockup */
+  .social-shot{
+    margin: 24px 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--bg-raised);
+    max-width: 620px;
+  }
+  .ext-links{ display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 20px 0 0; }
+  .ext-links a{
+    font-size: .92rem;
+    font-weight: 500;
+    color: var(--ink);
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 2px;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .ext-links a:hover{ color: var(--accent); border-color: var(--accent); }
+
+  .reflect-list{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+  .reflect-list li{ padding: 20px 0; }
+  .reflect-list li:first-child{ padding-top: 0; }
+  .reflect-list strong{ display: block; margin-bottom: 10px; font-size: 1rem; font-weight: 500; color: var(--ink); }
+  .reflect-list p{ margin: 0; }
+
+  .project-nav-cta{
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 20px; padding-top: 48px;
+  }
+
+  @media (max-width: 920px){
+    .project-grid{ grid-template-columns: 1fr; gap: 32px; }
+    .project-toc{
+      position: static;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px 18px;
+    }
+    .project-toc a{ border-left: none; border-bottom: 2px solid var(--line); padding: 4px 0; }
+    .stat-row{ grid-template-columns: 1fr; }
+    .palette-row{ grid-template-columns: 1fr 1fr; }
+    .type-row{ grid-template-columns: 1fr; }
+    .element-grid{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<a class="skip-link" href="#main">跳到主要內容</a>
+
+<header class="site-header" id="siteHeader">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">Yang Zhi Ling</a>
+    <nav class="main-nav" id="mainNav">
+      <a href="index.html#about">關於我</a>
+      <a href="index.html#work">作品</a>
+      <a href="index.html#experience">經歷</a>
+      <a href="index.html#contact">聯絡我</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="開啟選單" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="project-hero">
+    <div class="wrap">
+      <a href="index.html#work" class="back-link">← 回作品集</a>
+      <div class="section-head project-head">
+        <p class="kicker">主視覺設計</p>
+        <h1>(AI)dentity</h1>
+      </div>
+      <p class="project-lede">第十六屆 Open HCI 人機互動工作坊主視覺設計，以「辨識」為切入，探討 AI 時代下創作者與 AI 之間逐漸模糊的身份界線。以下整理我在標準字、設計系統與動態影像上的實際發想與製作過程。</p>
+
+      <div class="case-meta">
+        <div><span>專案時間</span><strong>6 個月</strong></div>
+        <div><span>團隊人數</span><strong>5 人</strong></div>
+        <div><span>我的角色</span><strong>主視覺、標準字、動畫、社群 Banner、網站設計</strong></div>
+      </div>
+    </div>
+    <div class="project-hero-img">
+      <div class="wrap">
+        <img src="assets/aidentity-banner.jpg" alt="(AI)dentity 主視覺設計" loading="eager">
+      </div>
+    </div>
+  </section>
+
+  <section class="project-body">
+    <div class="wrap project-grid">
+
+      <nav class="project-toc" aria-label="文章導覽">
+        <a href="#about">專案背景</a>
+        <a href="#concept">設計概念</a>
+        <a href="#logotype">標準字設計</a>
+        <a href="#system">設計系統</a>
+        <a href="#motion">動態影像</a>
+        <a href="#site">網站與社群</a>
+        <a href="#reflection">心得與反思</a>
+      </nav>
+
+      <div class="story-content">
+
+        <section class="story-section" id="about">
+          <h2>專案背景</h2>
+          <p>Open HCI 是一個由學生自治籌備的人機互動工作坊，宗旨是推廣人機互動學門，每年由不同學校的學生團隊接力籌辦。這次是第十六屆，主題訂為「(AI)dentity」——回應近年 AI 生成工具快速普及後，創作者與 AI 之間的界線越來越模糊的現象。我負責這屆的主視覺、標準字、動態影像與社群 Banner 設計，並與視覺部、網管部的夥伴協力製作活動網站。</p>
+          <div class="stat-row">
+            <div class="stat-card"><strong>07/16－07/19</strong><span>正式工作坊日期</span></div>
+            <div class="stat-card"><strong>台灣大學</strong><span>學新館，活動場地</span></div>
+            <div class="stat-card"><strong>5 人</strong><span>視覺團隊人數</span></div>
+          </div>
+        </section>
+
+        <section class="story-section" id="concept">
+          <h2>設計概念</h2>
+          <p>我們把「身份」重新定義為一個持續被判讀與生成的過程，而不是固定不變的東西。因此整套視覺以「細胞」、「框選」與「glitch（錯位）」三個元素為核心語彙：細胞代表持續分裂、增生、不斷變動的身份樣態；框選標記（像是介面上常見的偵測框、標籤 <code>??</code>）呼應 AI 辨識與判讀的視角；glitch 錯位則模擬辨識失準、誤判的瞬間。三者疊加在一起，呈現出身份在「判讀、誤判、重構」之間持續流動的狀態，也呼應了創作者與 AI 共同生成內容時，界線逐漸模糊的處境。</p>
+        </section>
+
+        <section class="story-section" id="logotype">
+          <h2>標準字設計</h2>
+          <p>主標準字「(AI)dentity」是整套視覺最核心的資產，我把它拆成三個部分處理，讓字體本身就在說故事。</p>
+          <div class="logotype-card">
+            <img src="assets/aidentity-logotype.png" alt="(AI)dentity 標準字設計" loading="lazy">
+          </div>
+          <ul class="callout-list">
+            <li><b>(AI)</b><span>以螢光綠括號框住「AI」，呼應框選、偵測的視覺語彙；括號內的「I」刻意置入像素化的雜訊紋理，模擬機器辨識畫面局部失準、重構的瞬間。</span></li>
+            <li><b>dentity</b><span>接續使用經典襯線體，維持人類手寫般的溫度，但在筆畫交界處加入細微的錯位與斷裂，暗示這個「人」的身份也正被悄悄地改寫。</span></li>
+            <li><b>&gt; OPEN HCI'26</b><span>頂部以電光藍的像素／等寬字體呈現，模仿終端機指令列的樣式，強化整體視覺與「AI、程式」之間的連結。</span></li>
+          </ul>
+        </section>
+
+        <section class="story-section" id="system">
+          <h2>設計系統</h2>
+          <p>色彩與字體都直接取自標準字本身，確保從主視覺、動態影像到社群 Banner 都維持一致的識別度。</p>
+          <div class="palette-row">
+            <div class="swatch">
+              <div class="swatch-color" style="background:#000000;"></div>
+              <div class="swatch-label"><strong>純黑</strong><span>#000000</span></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#A5FF00;"></div>
+              <div class="swatch-label"><strong>螢光綠</strong><span>#A5FF00</span></div>
+            </div>
+            <div class="swatch">
+              <div class="swatch-color" style="background:#050DFF;"></div>
+              <div class="swatch-label"><strong>電光藍</strong><span>#050DFF</span></div>
+            </div>
+          </div>
+          <div class="type-row">
+            <div class="type-card">
+              <span>標題／標準字</span>
+              <strong>襯線體 + 像素雜訊紋理</strong>
+            </div>
+            <div class="type-card mono">
+              <span>輔助／指令列風格</span>
+              <strong>&gt; Monospace Pixel Type</strong>
+            </div>
+          </div>
+          <div class="element-grid">
+            <div class="element-card"><strong>細胞圖形</strong>以圓點、氣泡狀圖形象徵持續分裂、增生的身份樣態，散佈於版面各處。</div>
+            <div class="element-card"><strong>框選標記</strong>以偵測框與 <code>??</code> 標籤模擬 AI 辨識介面，呼應「判讀」的主題。</div>
+            <div class="element-card"><strong>Glitch 錯位</strong>局部像素化與筆畫斷裂，呈現辨識失準、身份被重構的瞬間。</div>
+          </div>
+        </section>
+
+        <section class="story-section" id="motion">
+          <h2>動態影像</h2>
+          <p>除了平面視覺，我也負責製作活動的動態影像，把「細胞增生」與「glitch 錯位」的概念延伸成會呼吸、會變動的畫面，用在活動的宣傳與開場。</p>
+          <div class="video-frame">
+            <iframe src="https://www.youtube.com/embed/WdY9WGrwbN0" title="(AI)dentity 動態影像" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </section>
+
+        <section class="story-section" id="site">
+          <h2>網站與社群</h2>
+          <p>視覺確立後，我與視覺部、網管部的夥伴協力把它落地到社群 Banner 與活動網站上，我主要負責動畫設計、版面調整與活動報名區塊的規劃製作，確保整套識別在不同平台上都維持一致的辨識度。</p>
+          <div class="social-shot">
+            <img src="assets/aidentity-social.png" alt="(AI)dentity 社群 Banner 與活動網站設計" loading="lazy">
+          </div>
+          <div class="ext-links">
+            <a href="https://www.2026.openhci.com/" target="_blank" rel="noopener">官方網站 ↗</a>
+            <a href="https://www.instagram.com/open.hci/" target="_blank" rel="noopener">Instagram ↗</a>
+            <a href="https://www.facebook.com/openhci/?locale=zh_TW" target="_blank" rel="noopener">Facebook ↗</a>
+          </div>
+        </section>
+
+        <section class="story-section" id="reflection">
+          <h2>心得與反思</h2>
+          <ul class="reflect-list">
+            <li>
+              <strong>一個概念，要能延伸到每一個接觸點</strong>
+              <p>這是我第一次負責一整套視覺識別，從標準字、平面主視覺、動態影像到社群 Banner 與網站，都要維持同一套語彙。過程中我不斷提醒自己：不是每個畫面都要塞進所有元素，而是要抓住細胞、框選、glitch 這三個核心語彙，讓它們在不同載體上以不同比例出現，整體才會像同一套系統，而不是拼貼。</p>
+            </li>
+            <li>
+              <strong>跨部門協作，設計要能被別人接手</strong>
+              <p>網站需要和視覺部、網管部的夥伴一起完成，這讓我學會把設計系統整理得更清楚，包含色彩、字體與圖形元素的使用邏輯，讓夥伴在製作動畫與網站版面時，可以在不偏離主視覺的前提下自行延伸，而不是每個細節都要來回確認。</p>
+            </li>
+          </ul>
+        </section>
+
+        <div class="project-nav-cta">
+          <a href="index.html#work" class="link-arrow">← 回作品集看更多作品</a>
+          <a href="index.html#contact" class="link-arrow">聯絡我聊聊這個專案 <i>→</i></a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>© <span id="year"></span> Yang Zhi Ling 楊芷翎</p>
+    <a href="#top" class="back-top">TOP ↑</a>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>

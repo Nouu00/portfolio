@@ -23,7 +23,7 @@
     font-weight: 500;
     letter-spacing: .1em;
     text-transform: uppercase;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
     transition: color .2s ease;
   }
   .back-link:hover{ color: var(--accent); }
@@ -39,14 +39,15 @@
     font-size: 1.02rem;
     color: var(--ink-soft);
     max-width: 60ch;
-    margin: 0 0 48px;
+    margin: 0 0 32px;
   }
   .project-hero-img{
     background: var(--bg-raised);
     margin-top: 0;
   }
-  .project-hero-img img{ filter: grayscale(.4); }
-  .project-body{ padding: 88px 0 130px; }
+  .project-hero-img .wrap{ max-width: 760px; }
+  .project-hero-img img{ filter: grayscale(.4); border-radius: 8px; }
+  .project-body{ padding: 64px 0 96px; }
   .project-grid{
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -74,8 +75,8 @@
   .project-toc a.active{ color: var(--accent); border-left-color: var(--accent); }
 
   .story-section{
-    padding-bottom: 72px;
-    margin-bottom: 72px;
+    padding-bottom: 48px;
+    margin-bottom: 48px;
   }
   .story-section:last-child{ margin-bottom: 0; padding-bottom: 0; }
   .story-section h2{
@@ -131,7 +132,7 @@
     color: var(--ink);
   }
 
-  .highlight-block{ margin: 48px 0; }
+  .highlight-block{ margin: 32px 0; }
   .highlight-block h3{
     font-size: 1.15rem;
     font-weight: 500;
@@ -140,8 +141,8 @@
     gap: 10px;
     color: var(--ink);
   }
-  .highlight-block h3::before{ content: '—'; color: var(--accent); }
-  .before-after{ border: 1px solid var(--line); overflow: hidden; margin: 20px 0; background: var(--bg-raised); }
+  .highlight-block h3::before{ content: '★'; color: var(--accent); font-size: .7em; }
+  .before-after{ border: 1px solid var(--line); overflow: hidden; margin: 20px auto; background: var(--bg-raised); max-width: 620px; border-radius: 6px; }
   .before-after img{ width: 100%; display: block; }
   .highlight-pain{
     font-size: .86rem;
@@ -375,12 +376,21 @@
 
           <h3>付款碼結帳並兌換商品</h3>
           <p>測試結果顯示，使用者付款的流暢度提升了，但新版付款方式的切換操作不易被發現——原本的付款方式切換區塊辨識度不足。我後續透過強化資訊層級與視覺區隔，提升了它的可見性；此外，把商品兌換券整合至付款碼頁面後，使用者可以直接完成兌換，也提升了流程流暢度與曝光度。</p>
+          <div class="before-after">
+            <img src="assets/op-payment-iter.jpg" alt="付款碼頁面迭代前後對照：強化付款方式切換區塊的視覺區隔" loading="lazy">
+          </div>
 
           <h3>品牌館瀏覽</h3>
           <p>測試發現，部分使用者並不理解「品牌館」的定位，以品牌分類的架構反而提高了找商品的成本。因此我把導覽方式改以商品分類呈現，幫助使用者更容易瀏覽與探索商品。</p>
+          <div class="before-after">
+            <img src="assets/op-brand-iter.jpg" alt="品牌館迭代前後對照：品牌分類導覽改為商品分類導覽" loading="lazy">
+          </div>
 
           <h3>其他核心流程</h3>
           <p>其餘三項核心流程——使用點數兌換票券、使用票券兌換商品、出示會員條碼並完成點數折抵——測試結果都顯示流程有所改善，使用者能更快找到目標商品或入口，並順利完成任務。</p>
+          <div class="before-after">
+            <img src="assets/op-other-flows.jpg" alt="其他核心流程迭代後畫面：點數兌換票券、票券兌換商品、出示會員條碼" loading="lazy">
+          </div>
         </section>
 
         <section class="story-section" id="reflection">
