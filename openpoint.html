@@ -141,7 +141,15 @@
     gap: 10px;
     color: var(--ink);
   }
-  .highlight-block h3::before{ content: '★'; color: var(--accent); font-size: .7em; }
+  .highlight-block h3::before{
+    content: '';
+    width: .8em;
+    height: .8em;
+    flex: none;
+    background-color: var(--accent);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z'/></svg>") center / contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z'/></svg>") center / contain no-repeat;
+  }
   .before-after{ border: 1px solid var(--line); overflow: hidden; margin: 20px auto; background: var(--bg-raised); max-width: 620px; border-radius: 6px; }
   .before-after img{ width: 100%; display: block; }
   .highlight-pain{
@@ -219,7 +227,7 @@
     </div>
     <div class="project-hero-img">
       <div class="wrap">
-        <img src="assets/openpoint-hero.jpg" alt="OPENPOINT App 改版前後介面比較" loading="eager">
+        <img src="assets/openpoint-hero.png" alt="OPENPOINT App 改版前後介面比較" loading="eager">
       </div>
     </div>
   </section>
@@ -325,11 +333,11 @@
             <h3>首頁資訊層級重構</h3>
             <p>原本 Banner 位於頁面中段，容易打斷使用者的操作動線；調整後我把 Banner 置頂，讓宣傳資訊保留曝光，同時不干擾主要任務。我也把 OPENPOINT 點數、集點卡、票券與條碼集中於會員資訊區，讓使用者能在同一區塊查看與使用。</p>
             <div class="before-after">
-              <img src="assets/op-home.jpg" alt="首頁改版前後對照：Banner 置頂、會員資訊區整合點數票券條碼" loading="lazy">
+              <img src="assets/op-home.png" alt="首頁改版前後對照：Banner 置頂、會員資訊區整合點數票券條碼" loading="lazy">
             </div>
             <p>接著我把「我的常用功能」區域加大，讓使用者更容易點擊，同時把原本分散在服務 Tab 的功能整合進首頁；原本無差別曝光、容易被忽略的廣告，也改以個人化推薦呈現，提升使用者往下瀏覽的意願，也讓後續廣告曝光更有效。</p>
             <div class="before-after">
-              <img src="assets/op-home-2.jpg" alt="首頁改版前後對照：常用功能區加大、個人化推薦取代無差別廣告" loading="lazy">
+              <img src="assets/op-home-2.png" alt="首頁改版前後對照：常用功能區加大、個人化推薦取代無差別廣告" loading="lazy">
             </div>
             <div class="highlight-pain">
               <strong>解決的痛點：</strong>首頁資訊層級混亂、廣告干擾操作，使用者難以快速找到目標服務。
@@ -340,7 +348,7 @@
             <h3>建立品牌館專區</h3>
             <p>我把品牌資訊獨立成一個新的 Tab，與功能導向的內容分離，並在專區中整合商品、活動與品牌內容，提供更完整的瀏覽體驗，藉此提升品牌傳達效果與使用者的探索意願。</p>
             <div class="before-after">
-              <img src="assets/op-brand.jpg" alt="品牌館改版前後對照：品牌資訊獨立成專區" loading="lazy">
+              <img src="assets/op-brand.png" alt="品牌館改版前後對照：品牌資訊獨立成專區" loading="lazy">
             </div>
             <div class="highlight-pain">
               <strong>解決的痛點：</strong>品牌商品資訊原本存在於首頁各區塊，且與功能型資訊混合呈現，導致資訊結構不清、內容零碎，使用者無法完整接收品牌訊息，也降低了瀏覽意願。
@@ -351,7 +359,7 @@
             <h3>重構支付流程</h3>
             <p>我在付款碼頁面提供了支付方式的餘額預覽，讓使用者不用點進去也能先看到餘額；同時優化了切換機制，使用者可以直接在結帳頁面中選擇與調整付款方式，不必退出重新操作。</p>
             <div class="before-after">
-              <img src="assets/op-payment.jpg" alt="付款碼改版前後對照：支付方式餘額預覽與切換優化" loading="lazy">
+              <img src="assets/op-payment.png" alt="付款碼改版前後對照：支付方式餘額預覽與切換優化" loading="lazy">
             </div>
             <div class="highlight-pain">
               <strong>解決的痛點：</strong>App 內支付方式眾多，卻無法在點開前預覽各支付方式的餘額；系統預設上一次的支付方式，若要切換必須退出重新操作，動線不佳。
@@ -362,7 +370,7 @@
             <h3>票券兌換體驗重整</h3>
             <p>我依據使用者過去的使用行為與收藏偏好，建立了個人化推薦機制，並統一兌換與購買入口，讓它們集中至相同頁面進入。同時把「我的票券」入口前移至首頁，降低使用者的尋找成本，讓使用者能更快進入票券使用流程。</p>
             <div class="before-after">
-              <img src="assets/op-ticket.jpg" alt="票券兌換改版前後對照：我的票券入口前移至首頁" loading="lazy">
+              <img src="assets/op-ticket.png" alt="票券兌換改版前後對照：我的票券入口前移至首頁" loading="lazy">
             </div>
             <div class="highlight-pain">
               <strong>解決的痛點：</strong>票券入口層級過深，使用者不清楚拿到票券後要從哪裡開啟使用；推薦內容偏熱門導向、缺乏個人化，降低了兌換或購買意願。
@@ -377,19 +385,19 @@
           <h3>付款碼結帳並兌換商品</h3>
           <p>測試結果顯示，使用者付款的流暢度提升了，但新版付款方式的切換操作不易被發現——原本的付款方式切換區塊辨識度不足。我後續透過強化資訊層級與視覺區隔，提升了它的可見性；此外，把商品兌換券整合至付款碼頁面後，使用者可以直接完成兌換，也提升了流程流暢度與曝光度。</p>
           <div class="before-after">
-            <img src="assets/op-payment-iter.jpg" alt="付款碼頁面迭代前後對照：強化付款方式切換區塊的視覺區隔" loading="lazy">
+            <img src="assets/op-payment-iter.png" alt="付款碼頁面迭代前後對照：強化付款方式切換區塊的視覺區隔" loading="lazy">
           </div>
 
           <h3>品牌館瀏覽</h3>
           <p>測試發現，部分使用者並不理解「品牌館」的定位，以品牌分類的架構反而提高了找商品的成本。因此我把導覽方式改以商品分類呈現，幫助使用者更容易瀏覽與探索商品。</p>
           <div class="before-after">
-            <img src="assets/op-brand-iter.jpg" alt="品牌館迭代前後對照：品牌分類導覽改為商品分類導覽" loading="lazy">
+            <img src="assets/op-brand-iter.png" alt="品牌館迭代前後對照：品牌分類導覽改為商品分類導覽" loading="lazy">
           </div>
 
           <h3>其他核心流程</h3>
           <p>其餘三項核心流程——使用點數兌換票券、使用票券兌換商品、出示會員條碼並完成點數折抵——測試結果都顯示流程有所改善，使用者能更快找到目標商品或入口，並順利完成任務。</p>
           <div class="before-after">
-            <img src="assets/op-other-flows.jpg" alt="其他核心流程迭代後畫面：點數兌換票券、票券兌換商品、出示會員條碼" loading="lazy">
+            <img src="assets/op-other-flows.png" alt="其他核心流程迭代後畫面：點數兌換票券、票券兌換商品、出示會員條碼" loading="lazy">
           </div>
         </section>
 

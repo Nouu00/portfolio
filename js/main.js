@@ -72,3 +72,46 @@ if (lightboxImgs.length) {
     if (e.key === 'Escape') closeLightbox();
   });
 }
+
+// Marquee: keep looping seamlessly at any screen width
+const marqueeEl = document.querySelector('.marquee');
+const marqueeTrack = document.getElementById('marqueeTrack');
+if (marqueeEl && marqueeTrack) {
+  const MARQUEE_SPEED = 36; // px per second, matches original pace
+
+  const setupMarquee = () => {
+    const halves = marqueeTrack.querySelectorAll('.marquee-half');
+    if (halves.length < 2) return;
+
+    // reset each half back to a single base set before recalculating
+    halves.forEach(half => {
+      const sets = half.querySelectorAll('.marquee-set');
+      sets.forEach((set, i) => { if (i > 0) set.remove(); });
+    });
+
+    const containerWidth = marqueeEl.clientWidth;
+    const baseSet = halves[0].querySelector('.marquee-set');
+    if (!baseSet) return;
+    const setWidth = baseSet.getBoundingClientRect().width;
+    if (!setWidth) return;
+
+    const needed = Math.max(1, Math.ceil((containerWidth * 1.5) / setWidth));
+    halves.forEach(half => {
+      const first = half.querySelector('.marquee-set');
+      for (let i = 1; i < needed; i++) {
+        half.appendChild(first.cloneNode(true));
+      }
+    });
+
+    const halfWidth = marqueeTrack.scrollWidth / 2;
+    const duration = halfWidth / MARQUEE_SPEED;
+    marqueeTrack.style.animationDuration = duration + 's';
+  };
+
+  setupMarquee();
+  let marqueeResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(marqueeResizeTimer);
+    marqueeResizeTimer = setTimeout(setupMarquee, 200);
+  });
+}
