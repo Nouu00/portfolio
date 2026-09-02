@@ -487,7 +487,9 @@ body.lightbox-lock{ overflow: hidden; }
 @media (max-width: 920px){
   .hero-row{ grid-template-columns: 1fr; gap: 20px; }
   .hero-links{ align-items: flex-start; flex-direction: row; gap: 24px; flex-wrap: wrap; }
-  .case-study{ grid-template-columns: 1fr; gap: 24px; }
+  .case-study{ grid-template-columns: 1fr; gap: 16px; padding: 34px 0; }
+  .case-study.no-top-border{ padding-top: 0; padding-bottom: 34px; }
+  .case-media{ order: -1; }
   .case-index{ padding-top: 0; }
   .case-media-poster{ max-width: 280px; }
   .timeline-cols{ grid-template-columns: 1fr; gap: 40px; }
