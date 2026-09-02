@@ -240,9 +240,9 @@ a{ color: inherit; text-decoration: none; }
 }
 
 /* ---------- Sections ---------- */
-.section{ padding: 92px 0; }
+.section{ padding: 68px 0; }
 .section-head{
-  margin-bottom: 48px;
+  margin-bottom: 36px;
   max-width: 68ch;
 }
 .kicker{
@@ -262,7 +262,7 @@ a{ color: inherit; text-decoration: none; }
 .contact-head{ max-width: none; margin-bottom: 0; }
 
 /* ---------- Spec list (skills / awards) ---------- */
-.spec-list{ margin-bottom: 44px; }
+.spec-list{ margin-bottom: 32px; }
 .spec-list-awards{ margin-bottom: 0; }
 .awards-label{
   font-weight: 500;
@@ -303,15 +303,15 @@ a{ color: inherit; text-decoration: none; }
   letter-spacing: .02em;
   color: var(--ink);
   margin: 0 0 8px;
-  padding-top: 36px;
+  padding-top: 26px;
 }
 .work-group-label.first{ padding-top: 0; }
 
 .case-study{
   display: grid;
   grid-template-columns: 64px 1fr 1fr;
-  gap: 48px;
-  padding: 28px 0;
+  gap: 40px;
+  padding: 20px 0;
   align-items: start;
 }
 .case-study.no-top-border{ padding-top: 0; }
@@ -333,10 +333,9 @@ a{ color: inherit; text-decoration: none; }
 .case-media-poster{ max-width: 320px; }
 .case-media img{
   width: 100%;
-  filter: grayscale(.55) contrast(1.02);
-  transition: filter .5s ease, transform .6s ease;
+  transition: transform .6s ease;
 }
-.case-media:hover img{ filter: grayscale(0); transform: scale(1.02); }
+.case-media:hover img{ transform: scale(1.02); }
 .case-media-link{ display: block; }
 
 .case-body h3{
@@ -365,7 +364,7 @@ a{ color: inherit; text-decoration: none; }
 .case-summary{ color: var(--ink-soft); font-size: .95rem; margin: 0 0 28px; }
 
 /* ---------- Experience / Timeline ---------- */
-.timeline-cols{ display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; }
+.timeline-cols{ display: grid; grid-template-columns: 1.3fr 1fr; gap: 36px; }
 .timeline-col h3{
   font-size: .82rem;
   font-weight: 500;
@@ -449,8 +448,8 @@ a{ color: inherit; text-decoration: none; }
   .main-nav a{ padding: 14px 0; }
   .nav-toggle{ display: flex; }
   .hero{ padding: 128px 0 60px; }
-  .section{ padding: 64px 0; }
-  .work-group-label{ padding-top: 32px; }
+  .section{ padding: 48px 0; }
+  .work-group-label{ padding-top: 24px; }
   .case-meta div{ flex-direction: column; gap: 2px; }
   .case-meta strong{ text-align: left; }
 }

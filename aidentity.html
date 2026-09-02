@@ -23,7 +23,7 @@
     font-weight: 500;
     letter-spacing: .1em;
     text-transform: uppercase;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     transition: color .2s ease;
   }
   .back-link:hover{ color: var(--accent); }
@@ -32,14 +32,14 @@
     font-size: clamp(2.4rem, 6vw, 4.6rem);
     font-weight: 400;
     letter-spacing: -.01em;
-    margin: 20px 0 28px;
+    margin: 16px 0 24px;
     line-height: 1.05;
   }
   .project-lede{
     font-size: 1.02rem;
     color: var(--ink-soft);
     max-width: 60ch;
-    margin: 0 0 32px;
+    margin: 0 0 24px;
   }
   .project-hero-img{
     background: var(--bg-raised);
@@ -47,7 +47,7 @@
   }
   .project-hero-img .wrap{ max-width: 760px; }
   .project-hero-img img{ border-radius: 8px; }
-  .project-body{ padding: 64px 0 96px; }
+  .project-body{ padding: 48px 0 72px; }
   .project-grid{
     display: grid;
     grid-template-columns: 200px 1fr;
@@ -74,8 +74,8 @@
   .project-toc a:hover{ color: var(--ink-soft); }
 
   .story-section{
-    padding-bottom: 48px;
-    margin-bottom: 48px;
+    padding-bottom: 32px;
+    margin-bottom: 32px;
   }
   .story-section:last-child{ margin-bottom: 0; padding-bottom: 0; }
   .story-section h2{
@@ -168,6 +168,8 @@
   .logo-variants img{ width: 260px; max-width: 100%; border-radius: 0; }
   .logo-variants figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); text-align: center; }
   .badge-set img{ width: 150px; }
+  .badge-set figure{ margin: 0; }
+  .badge-set figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); }
   .sign-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0; }
   .sign-grid img{ width: 100%; }
   .sign-grid figure{ margin: 0; }
@@ -277,12 +279,10 @@
         <a href="#concept">設計概念</a>
         <a href="#logotype">標準字設計</a>
         <a href="#system">設計系統</a>
-        <a href="#badges">識別證設計</a>
-        <a href="#signage">現場指引與標示</a>
-        <a href="#print">活動印刷物</a>
-        <a href="#merch">紀念品設計</a>
         <a href="#motion">動態影像</a>
         <a href="#site">網站與社群</a>
+        <a href="#onsite">識別證、指引與印刷物</a>
+        <a href="#merch">紀念品設計</a>
         <a href="#photos">花絮合照</a>
         <a href="#reflection">心得與反思</a>
       </nav>
@@ -361,50 +361,6 @@
           </div>
         </section>
 
-        <section class="story-section" id="badges">
-          <h2>識別證設計</h2>
-          <p>現場的識別證是參加者對整套視覺的第一個實際接觸點，我延續標準字與螢光綠、電光藍的配色，依身份區分幹部、學員、講師三種名牌，讓工作人員能一眼辨識彼此的角色。</p>
-          <div class="asset-row badge-set">
-            <img class="badge-banner" src="assets/aidentity-banner-badge.png" alt="(AI)dentity 人機互動工作坊識別證頭版設計">
-          </div>
-          <div class="asset-row badge-set">
-            <img src="assets/aidentity-badge-staff.png" alt="幹部識別證：蘇毓心，總召">
-            <img src="assets/aidentity-badge-member.png" alt="學員識別證：沈采葳，第七組，國立臺北科技大學">
-            <img src="assets/aidentity-badge-lecturer.png" alt="講師識別證：鄭龍磻">
-          </div>
-        </section>
-
-        <section class="story-section" id="signage">
-          <h2>現場指引與標示</h2>
-          <p>工作坊為期四天，場地內有報到、幹部休息室、成果展等多個機能空間，我設計了一套現場指引與標示系統，用同樣的圖形語彙（細胞圖形、框選標記）延伸成樓層指引、方向箭頭與空間標示，讓學員能快速找到路。</p>
-          <div class="sign-grid">
-            <figure><img src="assets/aidentity-sign-5f.png" alt="樓層指引：在 5F"><figcaption>樓層指引</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-arrow.png" alt="方向指引：在這邊"><figcaption>方向指引</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-checkin.png" alt="學員報到標示"><figcaption>學員報到</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-exhibition.png" alt="期末成果展標示"><figcaption>期末成果展</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-lounge.png" alt="幹部休息室標示"><figcaption>幹部休息室</figcaption></figure>
-          </div>
-        </section>
-
-        <section class="story-section" id="print">
-          <h2>活動印刷物</h2>
-          <p>議程海報整理了前置工作坊與正式工作坊四天的完整時間軸，方便學員隨時查閱；期末成果展則設計了投票根，讓現場觀眾能撕下票根為喜歡的組別投票，把整套識別延伸到活動的互動環節。</p>
-          <div class="print-row">
-            <figure><img src="assets/aidentity-schedule.png" alt="(AI)dentity 議程總覽海報"><figcaption>議程總覽海報</figcaption></figure>
-            <figure><img src="assets/aidentity-voting.png" alt="期末成果展投票根設計"><figcaption>期末成果展投票根</figcaption></figure>
-          </div>
-        </section>
-
-        <section class="story-section" id="merch">
-          <h2>紀念品設計</h2>
-          <p>我也設計了給學員的紀念品：一款可以放入合照的壓克力相框吊飾、一款印有活動識別的圓形吊飾，以及包裝用的夾鏈袋，讓整套視覺延伸到參加者能實際帶走的物件上。</p>
-          <div class="merch-row">
-            <figure><img src="assets/aidentity-charm1.png" alt="相框式壓克力吊飾"><figcaption>相框壓克力吊飾</figcaption></figure>
-            <figure><img src="assets/aidentity-charm2.png" alt="圓形識別壓克力吊飾"><figcaption>圓形壓克力吊飾</figcaption></figure>
-            <figure><img src="assets/aidentity-bag.png" alt="紀念品夾鏈袋包裝"><figcaption>紀念品包裝</figcaption></figure>
-          </div>
-        </section>
-
         <section class="story-section" id="motion">
           <h2>動態影像</h2>
           <p>除了平面視覺，我也負責製作活動的動態影像，把「細胞增生」與「glitch 錯位」的概念延伸成會呼吸、會變動的畫面，用在活動的宣傳與開場。</p>
@@ -423,6 +379,49 @@
             <a href="https://www.2026.openhci.com/" target="_blank" rel="noopener">官方網站 ↗</a>
             <a href="https://www.instagram.com/open.hci/" target="_blank" rel="noopener">Instagram ↗</a>
             <a href="https://www.facebook.com/openhci/?locale=zh_TW" target="_blank" rel="noopener">Facebook ↗</a>
+          </div>
+        </section>
+
+        <section class="story-section" id="onsite">
+          <h2>識別證、指引與印刷物</h2>
+          <p>我也把整套識別延伸到現場會用到的物件上，維持視覺一致性。</p>
+
+          <h3>識別證與麥克風牌</h3>
+          <p>依身份設計了幹部、學員、講師三種識別證，加上給舞台講者使用的麥克風牌。</p>
+          <div class="asset-row badge-set">
+            <figure><img class="badge-banner" src="assets/aidentity-banner-badge.png" alt="(AI)dentity 麥克風牌設計"><figcaption>麥克風牌</figcaption></figure>
+          </div>
+          <div class="asset-row badge-set">
+            <img src="assets/aidentity-badge-staff.png" alt="幹部識別證：蘇毓心，總召">
+            <img src="assets/aidentity-badge-member.png" alt="學員識別證：沈采葳，第七組，國立臺北科技大學">
+            <img src="assets/aidentity-badge-lecturer.png" alt="講師識別證：鄭龍磻">
+          </div>
+
+          <h3>現場指引</h3>
+          <p>用同樣的圖形語彙延伸成樓層指引、方向與空間標示，讓學員能快速找到路。</p>
+          <div class="sign-grid">
+            <figure><img src="assets/aidentity-sign-5f.png" alt="樓層指引：在 5F"><figcaption>樓層指引</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-arrow.png" alt="方向指引：在這邊"><figcaption>方向指引</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-checkin.png" alt="學員報到標示"><figcaption>學員報到</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-exhibition.png" alt="期末成果展標示"><figcaption>期末成果展</figcaption></figure>
+            <figure><img src="assets/aidentity-sign-lounge.png" alt="幹部休息室標示"><figcaption>幹部休息室</figcaption></figure>
+          </div>
+
+          <h3>印刷物</h3>
+          <p>議程海報整理四天完整時間軸，投票根則用在期末成果展的投票環節。</p>
+          <div class="print-row">
+            <figure><img src="assets/aidentity-schedule.png" alt="(AI)dentity 議程總覽海報"><figcaption>議程總覽海報</figcaption></figure>
+            <figure><img src="assets/aidentity-voting.png" alt="期末成果展投票根設計"><figcaption>期末成果展投票根</figcaption></figure>
+          </div>
+        </section>
+
+        <section class="story-section" id="merch">
+          <h2>紀念品設計</h2>
+          <p>我也設計了給學員的紀念品：一款可以放入合照的壓克力相框吊飾、一款印有活動識別的圓形吊飾，以及包裝用的夾鏈袋，讓整套視覺延伸到參加者能實際帶走的物件上。</p>
+          <div class="merch-row">
+            <figure><img src="assets/aidentity-charm1.png" alt="相框式壓克力吊飾"><figcaption>相框壓克力吊飾</figcaption></figure>
+            <figure><img src="assets/aidentity-charm2.png" alt="圓形識別壓克力吊飾"><figcaption>圓形壓克力吊飾</figcaption></figure>
+            <figure><img src="assets/aidentity-bag.png" alt="紀念品夾鏈袋包裝"><figcaption>紀念品包裝</figcaption></figure>
           </div>
         </section>
 
