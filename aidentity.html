@@ -170,14 +170,14 @@
   .badge-set img{ width: 150px; }
   .badge-set figure{ margin: 0; }
   .badge-set figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); }
-  .sign-grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 24px 0; }
+  .sign-grid{ display: flex; flex-wrap: nowrap; gap: 14px; margin: 24px 0; max-width: 460px; }
+  .sign-grid figure{ margin: 0; flex: 1 1 0; min-width: 0; }
   .sign-grid img{ width: 100%; }
-  .sign-grid figure{ margin: 0; }
-  .sign-grid figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); text-align: center; }
-  .print-row{ display: flex; flex-wrap: wrap; gap: 32px; margin: 24px 0; align-items: flex-start; }
-  .print-row figure{ margin: 0; flex: 1 1 260px; max-width: 320px; }
+  .sign-grid figcaption{ margin-top: 8px; font-size: .78rem; color: var(--ink-faint); text-align: center; }
+  .print-row{ display: flex; flex-wrap: wrap; gap: 20px; margin: 24px 0; align-items: flex-start; }
+  .print-row figure{ margin: 0; flex: 1 1 180px; max-width: 220px; }
   .print-row img{ width: 100%; }
-  .print-row figcaption{ margin-top: 8px; font-size: .8rem; color: var(--ink-faint); }
+  .print-row figcaption{ margin-top: 8px; font-size: .78rem; color: var(--ink-faint); }
   .merch-row{ display: flex; flex-wrap: wrap; gap: 32px; margin: 24px 0; align-items: flex-end; }
   .merch-row figure{ margin: 0; }
   .merch-row img{ height: 220px; width: auto; max-width: 100%; }
@@ -221,7 +221,7 @@
     .palette-row{ grid-template-columns: 1fr 1fr; }
     .type-row{ grid-template-columns: 1fr; }
     .element-grid{ grid-template-columns: 1fr; }
-    .sign-grid{ grid-template-columns: 1fr 1fr; }
+    .sign-grid{ max-width: none; }
     .badge-set img{ width: 120px; }
     .merch-row img{ height: 160px; }
   }
@@ -401,10 +401,8 @@
           <p>用同樣的圖形語彙延伸成樓層指引、方向與空間標示，讓學員能快速找到路。</p>
           <div class="sign-grid">
             <figure><img src="assets/aidentity-sign-5f.png" alt="樓層指引：在 5F"><figcaption>樓層指引</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-arrow.png" alt="方向指引：在這邊"><figcaption>方向指引</figcaption></figure>
             <figure><img src="assets/aidentity-sign-checkin.png" alt="學員報到標示"><figcaption>學員報到</figcaption></figure>
             <figure><img src="assets/aidentity-sign-exhibition.png" alt="期末成果展標示"><figcaption>期末成果展</figcaption></figure>
-            <figure><img src="assets/aidentity-sign-lounge.png" alt="幹部休息室標示"><figcaption>幹部休息室</figcaption></figure>
           </div>
 
           <h3>印刷物</h3>
