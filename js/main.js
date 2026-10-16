@@ -115,3 +115,28 @@ if (marqueeEl && marqueeTrack) {
     marqueeResizeTimer = setTimeout(setupMarquee, 200);
   });
 }
+
+// Fog parallax: blobs drift slightly toward the cursor (desktop only)
+const fogEl = document.querySelector('.fog');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (fogEl && window.matchMedia('(pointer: fine)').matches && !prefersReducedMotion) {
+  const blobs = fogEl.querySelectorAll('.fog-blob');
+  let targetX = 0, targetY = 0, curX = 0, curY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+    targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+  }, { passive: true });
+
+  const strengths = [10, -14, 8];
+  const tick = () => {
+    curX += (targetX - curX) * 0.04;
+    curY += (targetY - curY) * 0.04;
+    blobs.forEach((blob, i) => {
+      const s = strengths[i] || 10;
+      blob.style.setProperty('--parallax', `translate(${curX * s}px, ${curY * s}px)`);
+    });
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}

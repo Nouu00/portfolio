@@ -9,10 +9,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=1789027204">
+<link rel="stylesheet" href="css/style.css?v=1792145063">
 </head>
-<body>
+<body class="style-misty">
 
+<div class="fog" aria-hidden="true">
+  <span class="fog-blob fog-blob-a"><span class="fog-blob-inner"></span></span>
+  <span class="fog-blob fog-blob-b"><span class="fog-blob-inner"></span></span>
+  <span class="fog-blob fog-blob-c"><span class="fog-blob-inner"></span></span>
+</div>
 <div class="grain" aria-hidden="true"></div>
 <a class="skip-link" href="#main">跳到主要內容</a>
 
@@ -35,8 +40,44 @@
 
   <!-- HERO -->
   <section class="hero" id="top">
-    <svg class="hero-line" viewBox="0 0 1200 500" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M -50,420 C 250,80 700,60 1250,260" />
+    <svg class="hero-visual" viewBox="0 0 1000 700" aria-hidden="true">
+      <defs>
+        <linearGradient id="branchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
+          <stop offset="100%" stop-color="rgba(150,172,194,.18)"/>
+        </linearGradient>
+        <radialGradient id="shardGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
+          <stop offset="55%" stop-color="rgba(196,213,228,.5)"/>
+          <stop offset="100%" stop-color="rgba(196,213,228,0)"/>
+        </radialGradient>
+        <radialGradient id="bloomGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.95)"/>
+          <stop offset="60%" stop-color="rgba(205,219,231,.4)"/>
+          <stop offset="100%" stop-color="rgba(205,219,231,0)"/>
+        </radialGradient>
+      </defs>
+
+      <circle class="hero-bloom bloom-c" cx="930" cy="75" r="30" fill="url(#bloomGrad)"></circle>
+      <circle class="hero-bloom bloom-b" cx="580" cy="360" r="42" fill="url(#bloomGrad)"></circle>
+      <circle class="hero-bloom bloom-a" cx="800" cy="170" r="72" fill="url(#bloomGrad)"></circle>
+
+      <path class="hero-branch b1" d="M800,170 C720,260 660,340 560,400 C460,460 360,500 240,560"/>
+      <path class="hero-branch b2" d="M800,170 C840,300 820,440 720,540 C660,600 580,630 500,650"/>
+      <path class="hero-branch b3" d="M800,170 C880,260 940,380 920,520"/>
+      <path class="hero-branch b4" d="M800,170 C760,100 680,50 540,40"/>
+      <path class="hero-branch b5" d="M800,170 C880,120 960,100 990,60"/>
+      <path class="hero-branch twig" d="M560,400 C520,360 460,340 410,360"/>
+      <path class="hero-branch twig" d="M720,540 C760,580 800,600 850,580"/>
+      <path class="hero-branch twig" d="M360,500 C320,470 270,460 230,480"/>
+
+      <path class="hero-shard" d="M800,170 L815,35 L825,55 Z"/>
+      <path class="hero-shard" d="M800,170 L930,70 L915,95 Z"/>
+      <path class="hero-shard" d="M800,170 L955,180 L935,200 Z"/>
+      <path class="hero-shard" d="M800,170 L900,260 L880,270 Z"/>
+      <path class="hero-shard" d="M800,170 L700,60 L720,90 Z"/>
+
+      <circle class="hero-glint" r="4"></circle>
     </svg>
     <div class="wrap hero-inner">
       <p class="eyebrow reveal">UI / UX Designer — Visual Designer</p>
@@ -294,13 +335,13 @@
 
 </main>
 
-<barter class="site-footer">
-  <div class="wrap barter-inner">
+<footer class="site-footer">
+  <div class="wrap footer-inner">
     <p>© <span id="year"></span> Yang Zhi Ling 楊芷翎</p>
     <a href="#top" class="back-top">TOP ↑</a>
   </div>
-</barter>
+</footer>
 
-<script src="js/main.js?v=1789027204"></script>
+<script src="js/main.js?v=1792145063"></script>
 </body>
 </html>
