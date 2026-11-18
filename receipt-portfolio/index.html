@@ -1308,8 +1308,7 @@ class Component extends DCLogic {
       Hh.tx += (Mm.x - Hh.tx) * 0.35; Hh.ty += (Mm.y - Hh.ty) * 0.35;
       this.curTag.style.left = Hh.tx.toFixed(1) + 'px'; this.curTag.style.top = Hh.ty.toFixed(1) + 'px';
     }
-    if (this.hov.inside && this.hov.cx != null && (Math.abs(this.target - this.cur) > 0.3 || this.hov.settle-- > 0)) {
-        if (Math.abs(this.target - this.cur) > 0.3) this.hov.settle = 6;
+    if (this.hov.inside && this.hov.cx != null && ((this.hov.fr = (this.hov.fr || 0) + 1) % 2 === 0)) {
       const under = document.elementFromPoint(this.hov.cx, this.hov.cy);
       if (under) this.hoverMove({ target: under });
     }
