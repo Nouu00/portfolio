@@ -220,52 +220,128 @@ class Component extends DCLogic {
       });
     }
     this.raf = requestAnimationFrame(this.tick);
-    this.setupLightbox();
   };
 
   setupLightbox = () => {
     const root = this.root;
-    if (!root) return;
+    if (!root || this.lb) return;
     const ov = document.createElement('div');
-    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', '放大圖片，點擊或按 Esc 關閉');
-    ov.style.cssText = 'position:fixed;inset:0;z-index:30;display:none;cursor:zoom-out;background:rgba(230,227,220,0);-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px);transition:background .45s ease,backdrop-filter .45s ease,-webkit-backdrop-filter .45s ease';
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', '圖片檢視：滾輪或雙指縮放、拖曳移動，點擊圖片外或按 Esc 關閉');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:30;display:none;cursor:zoom-out;touch-action:none;background:rgba(230,227,220,0);-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px);transition:background .45s ease,backdrop-filter .45s ease,-webkit-backdrop-filter .45s ease';
     const im = document.createElement('img');
-    im.alt = '';
-    im.style.cssText = 'position:fixed;left:0;top:0;max-width:none;transform-origin:0 0;background:#fdfcf9;box-shadow:0 30px 80px rgba(27,27,26,.22);will-change:transform';
-    ov.appendChild(im);
+    im.alt = ''; im.draggable = false;
+    im.style.cssText = 'position:fixed;left:0;top:0;max-width:none;transform-origin:0 0;background:#fdfcf9;box-shadow:0 30px 80px rgba(27,27,26,.22);will-change:transform;cursor:grab;user-select:none;-webkit-user-drag:none;touch-action:none';
+    const bar = document.createElement('div');
+    bar.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translate(-50%,12px);display:flex;align-items:center;gap:2px;padding:4px;background:#fdfcf9;box-shadow:0 10px 30px rgba(27,27,26,.14);font-family:"IBM Plex Mono","Noto Sans TC",monospace;font-size:13px;color:#1b1b1a;opacity:0;transition:opacity .3s ease,transform .45s cubic-bezier(.2,.85,.25,1);cursor:default';
+    const mk = (txt, label) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = txt; b.setAttribute('aria-label', label); b.style.cssText = 'min-width:44px;height:40px;padding:0 10px;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer'; b.onmouseenter = () => { b.style.background = '#ece9e2'; }; b.onmouseleave = () => { b.style.background = 'transparent'; }; bar.appendChild(b); return b; };
+    const bOut = mk('−', '縮小'), bPct = mk('100%', '重設大小'), bIn = mk('+', '放大'), bX = mk('✕', '關閉');
+    bPct.style.minWidth = '64px';
+    ov.appendChild(im); ov.appendChild(bar);
     document.body.appendChild(ov);
-    const L = this.lb = { ov, im, src: null, open: false, w: 1 };
-    const place = (r) => { im.style.transform = 'translate(' + r.left.toFixed(1) + 'px,' + r.top.toFixed(1) + 'px) scale(' + (r.width / L.w).toFixed(4) + ')'; };
+    const L = this.lb = { ov, im, src: null, open: false, w: 1, h: 1, x: 0, y: 0, z: 1, moved: 0 };
     const ease = 'transform .55s cubic-bezier(.2,.85,.25,1)';
+    const apply = (anim) => {
+      im.style.transition = anim ? 'transform .35s cubic-bezier(.2,.85,.25,1)' : 'none';
+      im.style.transform = 'translate(' + L.x.toFixed(1) + 'px,' + L.y.toFixed(1) + 'px) scale(' + L.z.toFixed(4) + ')';
+      bPct.textContent = Math.round(L.z * 100) + '%';
+    };
+    const center = () => { L.z = 1; L.x = (innerWidth - L.w) / 2; L.y = (innerHeight - L.h) / 2; };
+    const zoomAt = (nz, px, py, anim) => {
+      nz = Math.max(1, Math.min(6, nz));
+      if (nz === 1) { center(); apply(anim); return; }
+      L.x = px - (px - L.x) * (nz / L.z); L.y = py - (py - L.y) * (nz / L.z); L.z = nz;
+      apply(anim);
+    };
+    const place = (r) => { im.style.transform = 'translate(' + r.left.toFixed(1) + 'px,' + r.top.toFixed(1) + 'px) scale(' + (r.width / L.w).toFixed(4) + ')'; };
     this.lbOpen = (img) => {
       const nw = img.naturalWidth || img.width, nh = img.naturalHeight || img.height;
       if (!nw || !nh) return;
-      const s = Math.min(innerWidth * 0.92 / nw, innerHeight * 0.88 / nh);
-      const w = nw * s, h = nh * s;
-      L.w = w; L.src = img; L.open = true;
+      const s = Math.min(innerWidth * 0.92 / nw, (innerHeight - 110) * 0.94 / nh);
+      L.w = nw * s; L.h = nh * s; L.src = img; L.open = true;
       im.src = img.currentSrc || img.src; im.alt = img.alt || '';
-      im.style.width = w + 'px'; im.style.height = h + 'px';
+      im.style.width = L.w + 'px'; im.style.height = L.h + 'px';
       im.style.transition = 'none';
       ov.style.display = 'block';
       place(img.getBoundingClientRect());
       void im.offsetWidth;
       img.style.visibility = 'hidden';
+      center();
       im.style.transition = ease;
-      im.style.transform = 'translate(' + ((innerWidth - w) / 2).toFixed(1) + 'px,' + ((innerHeight - h) / 2).toFixed(1) + 'px) scale(1)';
-      ov.style.background = 'rgba(230,227,220,.82)';
+      im.style.transform = 'translate(' + L.x.toFixed(1) + 'px,' + L.y.toFixed(1) + 'px) scale(1)';
+      bPct.textContent = '100%';
+      ov.style.background = 'rgba(230,227,220,.86)';
       ov.style.webkitBackdropFilter = ov.style.backdropFilter = 'blur(14px)';
+      bar.style.opacity = '1'; bar.style.transform = 'translate(-50%,0)';
+      setTimeout(() => { if (L.open) bX.focus({ preventScroll: true }); }, 60);
     };
     this.lbClose = () => {
       if (!L.open) return;
       L.open = false;
       const src = L.src;
+      im.style.transition = ease;
       place(src.getBoundingClientRect());
       ov.style.background = 'rgba(230,227,220,0)';
       ov.style.webkitBackdropFilter = ov.style.backdropFilter = 'blur(0px)';
+      bar.style.opacity = '0'; bar.style.transform = 'translate(-50%,12px)';
       setTimeout(() => { if (!L.open) { ov.style.display = 'none'; src.style.visibility = ''; } }, 560);
+      try { src.focus({ preventScroll: true }); } catch (e) {}
     };
-    ov.addEventListener('click', (e) => { e.stopPropagation(); this.lbClose(); });
-    this.lbKey = (e) => { if (e.key === 'Escape') this.lbClose(); };
+    this.lbWheel = (e) => {
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      if (e.ctrlKey || Math.abs(dy) >= Math.abs(e.deltaX)) zoomAt(L.z * Math.exp(-dy * (e.ctrlKey ? 0.01 : 0.0016)), e.clientX, e.clientY, false);
+      else { L.x -= e.deltaX; apply(false); }
+    };
+    ov.addEventListener('wheel', (e) => { e.preventDefault(); e.stopPropagation(); this.lbWheel(e); }, { passive: false });
+    // drag + pinch
+    const pts = new Map();
+    let last = null, pinch = null;
+    im.addEventListener('pointerdown', (e) => {
+      e.preventDefault(); e.stopPropagation();
+      im.setPointerCapture(e.pointerId);
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      L.moved = 0; im.style.cursor = 'grabbing';
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), z: L.z }; last = null; }
+      else last = { x: e.clientX, y: e.clientY };
+    });
+    im.addEventListener('pointermove', (e) => {
+      if (!pts.has(e.pointerId)) return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pinch && pts.size >= 2) {
+        const [a, b] = [...pts.values()];
+        zoomAt(pinch.z * Math.hypot(a.x - b.x, a.y - b.y) / (pinch.d || 1), (a.x + b.x) / 2, (a.y + b.y) / 2, false);
+        L.moved += 10;
+      } else if (last) {
+        const dx = e.clientX - last.x, dy = e.clientY - last.y;
+        L.moved += Math.abs(dx) + Math.abs(dy);
+        L.x += dx; L.y += dy; last = { x: e.clientX, y: e.clientY };
+        apply(false);
+      }
+    });
+    const up = (e) => {
+      pts.delete(e.pointerId);
+      if (pts.size < 2) pinch = null;
+      if (pts.size === 1) { const p = [...pts.values()][0]; last = { x: p.x, y: p.y }; } else last = null;
+      im.style.cursor = 'grab';
+      if (!pts.size && L.z <= 1.001 && L.moved > 0) { center(); apply(true); }
+    };
+    im.addEventListener('pointerup', up);
+    im.addEventListener('pointercancel', up);
+    im.addEventListener('click', (e) => e.stopPropagation());
+    im.addEventListener('dblclick', (e) => { e.preventDefault(); e.stopPropagation(); zoomAt(L.z > 1.05 ? 1 : 2.5, e.clientX, e.clientY, true); });
+    bar.addEventListener('click', (e) => e.stopPropagation());
+    bar.addEventListener('pointerdown', (e) => e.stopPropagation());
+    bIn.onclick = () => zoomAt(L.z * 1.5, innerWidth / 2, innerHeight / 2, true);
+    bOut.onclick = () => zoomAt(L.z / 1.5, innerWidth / 2, innerHeight / 2, true);
+    bPct.onclick = () => { center(); apply(true); };
+    bX.onclick = () => this.lbClose();
+    ov.addEventListener('click', (e) => { if (e.target === ov) this.lbClose(); });
+    this.lbKey = (e) => {
+      if (!L.open) return;
+      if (e.key === 'Escape') this.lbClose();
+      else if (e.key === '+' || e.key === '=') zoomAt(L.z * 1.5, innerWidth / 2, innerHeight / 2, true);
+      else if (e.key === '-') zoomAt(L.z / 1.5, innerWidth / 2, innerHeight / 2, true);
+      else if (e.key === '0') { center(); apply(true); }
+    };
     window.addEventListener('keydown', this.lbKey);
     window.addEventListener('resize', this.lbClose);
     root.addEventListener('click', (e) => {
@@ -284,6 +360,7 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
+    this.setupLightbox();
     this.raf = requestAnimationFrame(this.tick);
     setTimeout(() => this.curtainTo(-115), 80);
     if (this.root) {
@@ -301,7 +378,7 @@ class Component extends DCLogic {
     }
     this.wheelY = window.scrollY || 0;
     this.onWheel = (e) => {
-      if (this.lb && this.lb.open) { e.preventDefault(); this.lbClose(); return; }
+      if (this.lb && this.lb.open) { e.preventDefault(); return; }
       if (e.ctrlKey) return;
       e.preventDefault();
       const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
