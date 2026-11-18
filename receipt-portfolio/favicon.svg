@@ -1,10 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<defs><filter id="s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#1b1b1a" flood-opacity=".18"/></filter></defs>
 <rect width="64" height="64" rx="15" fill="#e6e3dc"/>
-<circle cx="45" cy="45" r="17" fill="#cee05c"/>
-<path d="M8 8 H27 A19 19 0 0 1 8 27 Z" fill="#e87040"/>
-<path d="M19 13 H45 V47 L41.75 50 L38.5 47 L35.25 50 L32 47 L28.75 50 L25.5 47 L22.25 50 L19 47 Z" fill="#fdfcf9" filter="url(#s)"/>
-<rect x="24" y="20" width="16" height="4" rx="2" fill="#aaa69c"/>
-<rect x="24" y="29" width="11" height="3" rx="1.5" fill="#d2cec6"/>
-<rect x="24" y="35" width="16" height="3" rx="1.5" fill="#d2cec6"/>
+<path d="M9 31 V9 A22 22 0 0 1 31 31 Z" fill="#e87040"/>
+<circle cx="44" cy="20" r="11" fill="#cee05c"/>
+<rect x="9" y="35" width="20" height="20" rx="2" fill="#aaa69c"/>
+<path d="M33 55 A22 22 0 0 1 55 33 V55 Z" fill="#3d3b37"/>
 </svg>
