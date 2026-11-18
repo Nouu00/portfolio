@@ -17,8 +17,8 @@ a:hover{color:#55585c}
 .zz{-webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%;mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) 50%/12px 100%}
 [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform 1.1s cubic-bezier(.2,.8,.2,1),filter .9s ease;filter:blur(6px)}
 [data-reveal].on{opacity:1;transform:none;filter:none}
-[data-print]{clip-path:inset(0 0 100% 0);transition:clip-path 1.1s cubic-bezier(.65,0,.35,1)}
-[data-print].on{clip-path:inset(0 0 0 0)}
+@keyframes printIn{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+[data-print].on{animation:printIn 1.1s cubic-bezier(.65,0,.35,1) both}
 .back:hover .arr{transform:translateX(-6px)}
 .ln{transform:translateY(105%);transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
 .on .ln{transform:none}
@@ -216,7 +216,7 @@ class Component extends DCLogic {
         list.forEach(show);
         this.io.unobserve(en.target);
       });
-    }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 8% 0px' });
     els.forEach((el) => {
       const t = el.hasAttribute('data-print') && el.parentElement ? el.parentElement : el;
       if (!owner.has(t)) owner.set(t, []);
