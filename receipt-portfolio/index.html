@@ -319,12 +319,12 @@ class Component extends DCLogic {
       parts.push({ a: ang, d: 38 + Math.random() * 70, g: G[Math.floor(Math.random() * G.length)], s: 10 + Math.random() * 6, r: (Math.random() - 0.5) * 2 });
     }
     const kinds = ['circle', 'half', 'square', 'star', 'tri', 'ring'];
-    const greys = ['32,34,36', '120,122,125', '180,182,184', '255,255,255'];
+    const greys = (this.T().pal || ['170,166,156']).slice(0, 3).concat(['255,255,255']);
     const geo = [];
-    const n = 7 + Math.floor(Math.random() * 3);
+    const n = 5 + Math.floor(Math.random() * 2);
     for (let i = 0; i < n; i++) {
       const ang = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
-      geo.push({ k: kinds[Math.floor(Math.random() * kinds.length)], a: ang, d: 60 + Math.random() * 110, s: 8 + Math.random() * 18, r0: Math.random() * 6.28, rv: (Math.random() - 0.5) * 2.4, c: greys[Math.floor(Math.random() * greys.length)], dl: Math.random() * 0.12 });
+      geo.push({ k: kinds[Math.floor(Math.random() * kinds.length)], a: ang, d: 26 + Math.random() * 46, s: 5 + Math.random() * 8, r0: Math.random() * 6.28, rv: (Math.random() - 0.5) * 2.4, c: greys[Math.floor(Math.random() * greys.length)], dl: Math.random() * 0.12 });
     }
     this.clicks.push({ x: x, y: y, t0: performance.now(), parts: parts, geo: geo });
     if (!onUi && this.themeKey() === 'blueprint' || !onUi && this.themeKey() === 'bauhaus') this.addBody(x, y);
@@ -350,9 +350,9 @@ class Component extends DCLogic {
       ctx.save();
       ctx.translate(px, py);
       ctx.rotate(g.r0 + g.rv * e1);
-      ctx.globalAlpha = 0.85 * fade;
+      ctx.globalAlpha = 0.7 * fade;
       ctx.fillStyle = 'rgba(' + g.c + ',1)';
-      ctx.strokeStyle = 'rgba(32,34,36,0.55)';
+      ctx.strokeStyle = 'rgba(120,116,108,0.5)';
       ctx.lineWidth = 1;
       ctx.beginPath();
       if (g.k === 'circle') ctx.arc(0, 0, s / 2, 0, Math.PI * 2);
@@ -388,10 +388,10 @@ class Component extends DCLogic {
       for (let w = 0; w < 3; w++) {
         const aw = Math.max(0, age - w * 0.16);
         const ew = 1 - Math.pow(1 - Math.min(1, aw / 1.5), 3);
-        const R = 20 + ew * (210 + w * 60);
+        const R = 10 + ew * (90 + w * 30);
         const fade = (1 - ew) * (1 - w * 0.28);
         if (fade <= 0.004) continue;
-        const band = 26 + ew * 40;
+        const band = 14 + ew * 18;
         const g = ctx.createRadialGradient(k.x, k.y, Math.max(0, R - band), k.x, k.y, R + band * 0.4);
         g.addColorStop(0, 'rgba(' + lite + ',0)');
         g.addColorStop(0.55, 'rgba(' + lite + ',' + (0.34 * fade).toFixed(3) + ')');
@@ -403,11 +403,11 @@ class Component extends DCLogic {
       if (k.geo) this.drawGeo(ctx, k, age);
       const core = Math.max(0, 1 - age / 0.6);
       if (core > 0) {
-        const g2 = ctx.createRadialGradient(k.x, k.y, 0, k.x, k.y, 60);
+        const g2 = ctx.createRadialGradient(k.x, k.y, 0, k.x, k.y, 28);
         g2.addColorStop(0, 'rgba(' + lite + ',' + (0.4 * core).toFixed(3) + ')');
         g2.addColorStop(1, 'rgba(' + lite + ',0)');
         ctx.fillStyle = g2;
-        ctx.beginPath(); ctx.arc(k.x, k.y, 60, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(k.x, k.y, 28, 0, Math.PI * 2); ctx.fill();
       }
     }
     this.fxDrawn = true;
@@ -539,7 +539,7 @@ class Component extends DCLogic {
         const age = (performance.now() - ck.t0) / 1000;
         const cp = inv.transformPoint(new DOMPoint(ck.x * S, ck.y * S));
         const ex = x - cp.x, ey = y - cp.y, ed = Math.hypot(ex, ey) || 1;
-        const kick = 120 * Math.exp(-age * 2.2) * Math.sin(Math.min(1, age * 3) * Math.PI * 0.5) * Math.exp(-Math.pow(ed / 520, 2)) * sh.d;
+        const kick = 60 * Math.exp(-age * 2.2) * Math.sin(Math.min(1, age * 3) * Math.PI * 0.5) * Math.exp(-Math.pow(ed / 520, 2)) * sh.d;
         x += (ex / ed) * kick; y += (ey / ed) * kick;
       }
       const br = 1 + 0.05 * Math.sin(t * 0.17 + i * 0.9);

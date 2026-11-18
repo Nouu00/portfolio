@@ -44,12 +44,12 @@ class Component extends DCLogic {
   setFx = (el) => { this.fx = el; };
   onDown = (e) => {
     const kinds = ['circle', 'half', 'square', 'star', 'tri', 'ring'];
-    const greys = ['32,34,36', '120,122,125', '180,182,184', '255,255,255'];
+    const greys = this.PAL.concat(['255,255,255']);
     const geo = [];
-    const n = 7 + Math.floor(Math.random() * 3);
+    const n = 5 + Math.floor(Math.random() * 2);
     for (let i = 0; i < n; i++) {
       const ang = (i / n) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
-      geo.push({ k: kinds[Math.floor(Math.random() * kinds.length)], a: ang, d: 60 + Math.random() * 110, s: 8 + Math.random() * 18, r0: Math.random() * 6.28, rv: (Math.random() - 0.5) * 2.4, c: greys[Math.floor(Math.random() * greys.length)], dl: Math.random() * 0.12 });
+      geo.push({ k: kinds[Math.floor(Math.random() * kinds.length)], a: ang, d: 26 + Math.random() * 46, s: 5 + Math.random() * 8, r0: Math.random() * 6.28, rv: (Math.random() - 0.5) * 2.4, c: greys[Math.floor(Math.random() * greys.length)], dl: Math.random() * 0.12 });
     }
     this.clicks.push({ x: e.clientX, y: e.clientY, t0: performance.now(), geo: geo });
     if (this.clicks.length > 6) this.clicks.shift();
@@ -70,11 +70,11 @@ class Component extends DCLogic {
       const k = this.clicks[i];
       const age = (now - k.t0) / 1000;
       const ew = 1 - Math.pow(1 - Math.min(1, age / 1.2), 3);
-      const R = 16 + ew * 150, fade0 = 1 - ew;
+      const R = 10 + ew * 80, fade0 = 1 - ew;
       if (fade0 > 0.01) {
-        const g = ctx.createRadialGradient(k.x, k.y, Math.max(0, R - 30), k.x, k.y, R + 12);
+        const g = ctx.createRadialGradient(k.x, k.y, Math.max(0, R - 16), k.x, k.y, R + 8);
         g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.6, 'rgba(255,255,255,' + (0.35 * fade0).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(k.x, k.y, R + 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(k.x, k.y, R + 8, 0, Math.PI * 2); ctx.fill();
       }
       for (let j = 0; j < k.geo.length; j++) {
         const gm = k.geo[j];
@@ -89,9 +89,9 @@ class Component extends DCLogic {
         ctx.save();
         ctx.translate(k.x + Math.cos(gm.a) * gm.d * e1, k.y + Math.sin(gm.a) * gm.d * e1 - a2 * 14);
         ctx.rotate(gm.r0 + gm.rv * e1);
-        ctx.globalAlpha = 0.85 * fade;
+        ctx.globalAlpha = 0.7 * fade;
         ctx.fillStyle = 'rgb(' + gm.c + ')';
-        ctx.strokeStyle = 'rgba(32,34,36,0.55)';
+        ctx.strokeStyle = 'rgba(120,116,108,0.5)';
         ctx.lineWidth = 1;
         ctx.beginPath();
         if (gm.k === 'circle' || gm.k === 'ring') ctx.arc(0, 0, s / 2, 0, Math.PI * 2);
