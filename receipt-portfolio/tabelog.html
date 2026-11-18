@@ -220,6 +220,67 @@ class Component extends DCLogic {
       });
     }
     this.raf = requestAnimationFrame(this.tick);
+    this.setupLightbox();
+  };
+
+  setupLightbox = () => {
+    const root = this.root;
+    if (!root) return;
+    const ov = document.createElement('div');
+    ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-modal', 'true'); ov.setAttribute('aria-label', '放大圖片，點擊或按 Esc 關閉');
+    ov.style.cssText = 'position:fixed;inset:0;z-index:30;display:none;cursor:zoom-out;background:rgba(230,227,220,0);-webkit-backdrop-filter:blur(0px);backdrop-filter:blur(0px);transition:background .45s ease,backdrop-filter .45s ease,-webkit-backdrop-filter .45s ease';
+    const im = document.createElement('img');
+    im.alt = '';
+    im.style.cssText = 'position:fixed;left:0;top:0;max-width:none;transform-origin:0 0;background:#fdfcf9;box-shadow:0 30px 80px rgba(27,27,26,.22);will-change:transform';
+    ov.appendChild(im);
+    document.body.appendChild(ov);
+    const L = this.lb = { ov, im, src: null, open: false, w: 1 };
+    const place = (r) => { im.style.transform = 'translate(' + r.left.toFixed(1) + 'px,' + r.top.toFixed(1) + 'px) scale(' + (r.width / L.w).toFixed(4) + ')'; };
+    const ease = 'transform .55s cubic-bezier(.2,.85,.25,1)';
+    this.lbOpen = (img) => {
+      const nw = img.naturalWidth || img.width, nh = img.naturalHeight || img.height;
+      if (!nw || !nh) return;
+      const s = Math.min(innerWidth * 0.92 / nw, innerHeight * 0.88 / nh);
+      const w = nw * s, h = nh * s;
+      L.w = w; L.src = img; L.open = true;
+      im.src = img.currentSrc || img.src; im.alt = img.alt || '';
+      im.style.width = w + 'px'; im.style.height = h + 'px';
+      im.style.transition = 'none';
+      ov.style.display = 'block';
+      place(img.getBoundingClientRect());
+      void im.offsetWidth;
+      img.style.visibility = 'hidden';
+      im.style.transition = ease;
+      im.style.transform = 'translate(' + ((innerWidth - w) / 2).toFixed(1) + 'px,' + ((innerHeight - h) / 2).toFixed(1) + 'px) scale(1)';
+      ov.style.background = 'rgba(230,227,220,.82)';
+      ov.style.webkitBackdropFilter = ov.style.backdropFilter = 'blur(14px)';
+    };
+    this.lbClose = () => {
+      if (!L.open) return;
+      L.open = false;
+      const src = L.src;
+      place(src.getBoundingClientRect());
+      ov.style.background = 'rgba(230,227,220,0)';
+      ov.style.webkitBackdropFilter = ov.style.backdropFilter = 'blur(0px)';
+      setTimeout(() => { if (!L.open) { ov.style.display = 'none'; src.style.visibility = ''; } }, 560);
+    };
+    ov.addEventListener('click', (e) => { e.stopPropagation(); this.lbClose(); });
+    this.lbKey = (e) => { if (e.key === 'Escape') this.lbClose(); };
+    window.addEventListener('keydown', this.lbKey);
+    window.addEventListener('resize', this.lbClose);
+    root.addEventListener('click', (e) => {
+      const img = e.target && e.target.closest ? e.target.closest('img') : null;
+      if (!img || img.closest('a') || !root.contains(img)) return;
+      this.lbOpen(img);
+    });
+    root.querySelectorAll('img').forEach((img) => {
+      if (img.closest('a')) return;
+      img.style.cursor = 'zoom-in';
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', (img.alt || '圖片') + '，點擊放大');
+      img.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.lbOpen(img); } });
+    });
   };
 
   componentDidMount() {
@@ -240,6 +301,7 @@ class Component extends DCLogic {
     }
     this.wheelY = window.scrollY || 0;
     this.onWheel = (e) => {
+      if (this.lb && this.lb.open) { e.preventDefault(); this.lbClose(); return; }
       if (e.ctrlKey) return;
       e.preventDefault();
       const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
@@ -280,6 +342,7 @@ class Component extends DCLogic {
   }
 
   componentWillUnmount() {
+    if (this.lb) { this.lb.ov.remove(); window.removeEventListener('keydown', this.lbKey); window.removeEventListener('resize', this.lbClose); }
     cancelAnimationFrame(this.raf);
     window.removeEventListener('wheel', this.onWheel);
     if (this.io) this.io.disconnect();
