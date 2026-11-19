@@ -194,7 +194,7 @@ class Component extends DCLogic {
 
   openStub = (i, el) => {
     const H = this.hov;
-    clearTimeout(H.hideT);
+    if (H.hideT) { clearTimeout(H.hideT); H.hideT = 0; }
     if (H.i === i) return;
     H.i = i; H.el = el;
     const w = this.WORKS[i];
@@ -217,8 +217,9 @@ class Component extends DCLogic {
 
   closeStub = () => {
     const H = this.hov;
-    clearTimeout(H.hideT);
+    if (H.hideT) return; // already closing; don't keep restarting the timer
     H.hideT = setTimeout(() => {
+      H.hideT = 0;
       H.i = -1; H.el = null;
       const st = this.stub;
       if (!st) return;
