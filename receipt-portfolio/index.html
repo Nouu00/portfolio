@@ -19,8 +19,9 @@
 <meta name="twitter:image" content="https://nouu00.github.io/portfolio/receipt-portfolio/og.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Inter+Tight:wght@300;400;500&amp;family=Barlow+Condensed:wght@300;600&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Inter+Tight:wght@300;400;500&amp;family=Barlow+Condensed:wght@300;600&amp;family=Noto+Sans+TC:wght@300;400;500;700;800&amp;display=swap">
 <style>
+@font-face{font-family:'Archivo X';src:url(images/archivo-x.woff2) format('woff2');font-weight:800;font-display:swap}
 body{margin:0}
 a{color:#1b1b1a;text-decoration:none;border-bottom:1px solid #1b1b1a}
 a:hover{color:#5a5752;border-bottom-color:#5a5752}
@@ -959,8 +960,8 @@ class Component extends DCLogic {
     this.lensSquash += (sqT - this.lensSquash) * 0.07;
     // type
     const size = 112 - 64 * e;
-    const fam = 'px "Inter Tight", "Noto Sans TC", sans-serif';
-    const segs = [['500', 'UX / VISUAL / RESEARCH'], ['300', '   ——   '], ['300', '楊芷翎'], ['300', '   ——   ']];
+    const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
+    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', '楊芷翎'], ['800', '   ——   ']];
     const o = off.getContext('2d');
     o.setTransform(dpr, 0, 0, dpr, 0, 0);
     o.clearRect(0, 0, CW, CH);
@@ -1449,6 +1450,7 @@ class Component extends DCLogic {
     setTimeout(this.measure, 400);
     setTimeout(this.measure, 1500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Noto Sans TC"', '楊芷翎')]).then(this.measure, () => {});
     this.raf = requestAnimationFrame(this.tick);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let back = null;
