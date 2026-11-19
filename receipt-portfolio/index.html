@@ -580,6 +580,10 @@ class Component extends DCLogic {
     for (let i = 0; i < 6; i++) ctx.fillRect(OX + 36 + i * 89, OY + 104, 80, 2);
   };
 
+  // seconds since the page was revealed after the loading mask (negative while loading)
+  revealAge = (now) => this.introOn ? -1 : ((now || performance.now()) - (this.introEnd || 0)) / 1000;
+  easeBack = (x) => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+
   drawBg = (now) => {
     const c = this.bg;
     if (!c) return;
@@ -602,6 +606,34 @@ class Component extends DCLogic {
     else this.bgShapes(ctx, S, t, m);
     ctx.filter = 'none';
     ctx.globalCompositeOperation = 'source-over';
+    const ra = this.revealAge(now);
+    if (ra > -0.5 && ra < 1.8) this.fisheye(c, Math.pow(1 - Math.max(0, Math.min(1, ra / 1.8)), 2));
+  };
+
+  // separable fisheye on a canvas, amount 0..1
+  fisheye = (c, amt) => {
+    if (amt < 0.01) return;
+    const W = c.width, H = c.height;
+    if (!this.fishT) this.fishT = document.createElement('canvas');
+    const T = this.fishT;
+    if (T.width !== W || T.height !== H) { T.width = W; T.height = H; }
+    const tx = T.getContext('2d'), cx = c.getContext('2d');
+    const a = 0.2 + 1.25 * amt, sa = Math.sin(a);
+    const map = (u) => Math.asin(Math.max(-1, Math.min(1, u * sa))) / a;
+    const zoom = 1 + 0.35 * amt;
+    tx.setTransform(1, 0, 0, 1, 0, 0); tx.clearRect(0, 0, W, H);
+    const st = 2;
+    for (let x = 0; x < W; x += st) {
+      const u0 = (x / W) * 2 - 1, u1 = ((x + st) / W) * 2 - 1;
+      const s0 = (map(u0) / zoom + 1) / 2 * W, s1 = (map(u1) / zoom + 1) / 2 * W;
+      tx.drawImage(c, s0, 0, Math.max(0.5, s1 - s0), H, x, 0, st + 0.5, H);
+    }
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, W, H);
+    for (let y = 0; y < H; y += st) {
+      const u0 = (y / H) * 2 - 1, u1 = ((y + st) / H) * 2 - 1;
+      const s0 = (map(u0) / zoom + 1) / 2 * H, s1 = (map(u1) / zoom + 1) / 2 * H;
+      cx.drawImage(T, 0, s0, W, Math.max(0.5, s1 - s0), 0, y, W, st + 0.5);
+    }
   };
 
   shapePath = (ctx, sh) => {
@@ -652,14 +684,21 @@ class Component extends DCLogic {
         const kick = 60 * Math.exp(-age * 2.2) * Math.sin(Math.min(1, age * 3) * Math.PI * 0.5) * Math.exp(-Math.pow(ed / 520, 2)) * sh.d;
         x += (ex / ed) * kick; y += (ey / ed) * kick;
       }
-      const br = 1 + 0.05 * Math.sin(t * 0.17 + i * 0.9);
+      const ra = this.revealAge();
+      const pin = Math.max(0, Math.min(1, (ra - 0.05 - i * 0.07) / 0.75));
+      if (pin <= 0) continue;
+      const pop = this.easeBack(pin);
+      const tint = Math.max(0, Math.min(1, (ra - 0.35 - i * 0.07) / 0.6));
+      const br = (1 + 0.05 * Math.sin(t * 0.17 + i * 0.9)) * Math.max(0.01, pop);
       ctx.save();
       ctx.translate(x, y);
-      ctx.rotate(Math.sin(t * 0.06 + i) * 0.08);
+      ctx.rotate(Math.sin(t * 0.06 + i) * 0.08 + (1 - pin) * 0.6);
       ctx.scale(br, br);
       const th = this.T();
       const pal = th.pal || this.THEMES.bauhaus.pal;
-      ctx.fillStyle = 'rgba(' + pal[sh.c] + ',' + (sh.a * (th.aMul || 1)).toFixed(3) + ')';
+      let col = pal[sh.c];
+      if (tint < 1) { const a1 = col.split(',').map(Number), g = [150, 148, 142]; col = a1.map((v, j) => Math.round(g[j] + (v - g[j]) * tint)).join(','); }
+      ctx.fillStyle = 'rgba(' + col + ',' + (sh.a * (th.aMul || 1) * Math.min(1, pin * 1.6)).toFixed(3) + ')';
       this.shapePath(ctx, sh);
       ctx.fill();
       ctx.restore();
@@ -960,7 +999,7 @@ class Component extends DCLogic {
     this.lensSquash += (sqT - this.lensSquash) * 0.07;
     // type
     // stacked rows that turn like cube faces (left-right) to reveal the next set of words
-    const size = 96 - 36 * e;
+    const size = 74 - 26 * e;
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
     const o = off.getContext('2d');
     o.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -970,40 +1009,50 @@ class Component extends DCLogic {
     o.font = '800 ' + size.toFixed(2) + fam;
     // faces: each row is [text, tracking in em]
     const FACES = [
-      [['YANG ZHI LING', -0.02], ['UX / VISUAL', -0.02], ['R E S E A R C H', 0]],
-      [['PROBLEM', -0.02], ['F I R S T ,', 0], ['PIXELS LATER', -0.02]],
-      [['OPEN TO', -0.02], ['U I / U X', 0], ['INTERNSHIP', -0.02]]
+      [['YANG ZHI LING', -0.03], ['UX / VISUAL', -0.03], ['RESEARCH', 0.16]],
+      [['PROBLEM', -0.03], ['FIRST,', 0.16], ['PIXELS LATER', -0.03]],
+      [['OPEN TO', -0.03], ['UI / UX', 0.16], ['INTERNSHIP', -0.03]]
     ];
-    const hold = 2.8, flip = 0.8, stag = 0.16;
+    const hold = 1.75, flip = 0.95, stag = 0.11;
     const cyc = FACES.length * hold;
     const D = this.drag;
     if (!D.on) { D.off += D.v; D.v *= 0.94; if (Math.abs(D.v) < 0.02) D.v = 0; }
-    // dragging sideways or scrolling nudges the turning forward / back
-    const tt = now * 0.001 + D.off * 0.006;
-    const lh = size * 1.02;
+    const ra = this.revealAge(now);
+    const tt = Math.max(0, ra - 1.6) + D.off * 0.006;
+    const lh = size * 1.0;
     const yb = 220 + size * 0.35 - e * 20;
     const mw = (t, tr) => { if ('letterSpacing' in o) o.letterSpacing = (tr * size).toFixed(2) + 'px'; return o.measureText(t).width; };
-    const drawFace = (t, tr, x, y, sx) => {
+    const drawFace = (t, tr, x, y, sx, sy) => {
       if (sx < 0.012) return;
       if ('letterSpacing' in o) o.letterSpacing = (tr * size).toFixed(2) + 'px';
-      o.save(); o.translate(x, y); o.scale(sx, 1); o.fillText(t, 0, 0); o.restore();
+      o.save(); o.translate(x, y - size * 0.36); o.scale(sx, sy); o.fillText(t, 0, size * 0.36); o.restore();
     };
+    // AE-style easy ease (strong in/out)
+    const ez = (p) => p < 0.5 ? 16 * p * p * p * p * p : 1 - Math.pow(-2 * p + 2, 5) / 2;
     for (let r = 0; r < 3; r++) {
-      const local = ((tt - r * stag) % cyc + cyc) % cyc;
+      // entry: rows rise in one after another, stretched tall then settling
+      const rin = Math.max(0, Math.min(1, (ra - 0.95 - r * 0.13) / 0.85));
+      if (rin <= 0) continue;
+      const ri = 1 - Math.pow(1 - rin, 4);
+      const local = Math.max(0, tt - r * stag) % cyc;
       const fi = Math.floor(local / hold);
       const inFace = local - fi * hold;
       const cur = FACES[fi][r], nxt = FACES[(fi + 1) % FACES.length][r];
-      const p = Math.max(0, Math.min(1, (inFace - (hold - flip)) / flip));
-      const pe = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      const p = tt <= 0 ? 0 : Math.max(0, Math.min(1, (inFace - (hold - flip)) / flip));
+      const pe = ez(p);
       const th = pe * Math.PI / 2;
       const wo = mw(cur[0], cur[1]), wn = mw(nxt[0], nxt[1]);
       const co = Math.cos(th), si = Math.sin(th);
       const x = (CW - (wn * si + wo * co)) / 2;
-      const y = yb + (r - 1) * lh;
-      // the new face swings in from the left while the old one turns away to the right
-      drawFace(nxt[0], nxt[1], x, y, si);
-      drawFace(cur[0], cur[1], x + wn * si, y, co);
+      const swell = 1 + 0.22 * Math.sin(Math.PI * pe);
+      const y = yb + (r - 1) * lh + (1 - ri) * 90;
+      const sy0 = 1 + (1 - ri) * 1.8;
+      o.globalAlpha = Math.min(1, rin * 2.2);
+      // the new face swings in from the left while the old one turns away to the right (far side shrinks)
+      drawFace(nxt[0], nxt[1], x, y, si, sy0 * swell * (0.72 + 0.28 * si));
+      drawFace(cur[0], cur[1], x + wn * si, y, co, sy0 * swell * (0.72 + 0.28 * co));
     }
+    o.globalAlpha = 1;
     if ('letterSpacing' in o) o.letterSpacing = '0px';
     const t = now * 0.001;
     const near = M.on * Math.exp(-Math.pow((M.sy - (TOP + yb - size * 0.35)) / 230, 2)) * (1 - e);
@@ -1401,6 +1450,19 @@ class Component extends DCLogic {
       const Hh = this.hov, Mm = this.mouse;
       Hh.tx += (Mm.x - Hh.tx) * 0.35; Hh.ty += (Mm.y - Hh.ty) * 0.35;
       this.curTag.style.left = Hh.tx.toFixed(1) + 'px'; this.curTag.style.top = Hh.ty.toFixed(1) + 'px';
+    }
+    // entry sequence: printer (and the paper in it) rises after the shapes
+    {
+      const ra = this.revealAge();
+      const pb = this.printer && this.printer.parentElement;
+      if (ra < 2.4 || !this.entryDone) {
+        const pp = Math.max(0, Math.min(1, (ra - 0.45) / 0.85));
+        const dy = ra < 0 ? 240 : (1 - this.easeBack(pp)) * 240;
+        const tr = 'translateX(-50%) translateY(' + dy.toFixed(1) + 'px)';
+        if (pb) pb.style.transform = tr;
+        if (this.clipEl) this.clipEl.style.transform = tr;
+        this.entryDone = ra >= 2.4;
+      }
     }
     // stub follows scroll: show the work crossing the middle of the visible paper
     if (this.clipEl && this.scroller && ((this.sfr = (this.sfr || 0) + 1) % 3 === 0)) {
