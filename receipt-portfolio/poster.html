@@ -44,7 +44,22 @@ a:hover{color:#55585c}
 @media (prefers-reduced-motion:reduce){[data-reveal],[data-print]{opacity:1;transform:none;filter:none;clip-path:none;transition:none}.cgrain{animation:none}}
 </style>
 
-<style></style>
+
+<style>
+@media (max-width: 760px){
+  .cnav{padding:4px 8px!important;gap:6px!important;font-size:11px!important}
+  .cnav > div{flex-wrap:nowrap!important;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:72vw}
+  .cnav > div::-webkit-scrollbar{display:none}
+  .cnav a{white-space:nowrap;padding:0 8px!important;min-height:40px!important}
+  .cnav a span{display:none}
+  h1{font-size:44px!important;line-height:1.05!important}
+  h2{font-size:24px!important}
+  section{gap:18px 24px!important}
+  [style*="font-size: 16px; line-height: 1.95"]{font-size:15px!important;line-height:1.85!important}
+  [style*="max-width: 300px"]{max-width:none!important}
+  iframe{max-width:100%}
+}
+</style>
 </head>
 <body>
 <div id="app"></div>
