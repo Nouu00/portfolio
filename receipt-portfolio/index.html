@@ -21,7 +21,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Inter+Tight:wght@300;400;500&amp;family=Barlow+Condensed:wght@300;600&amp;family=Noto+Sans+TC:wght@300;400;500;700;800&amp;display=swap">
 <style>
-@font-face{font-family:'Fraunces X';src:url(images/fraunces-x.woff2) format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Archivo X';src:url(images/archivo-x.woff2) format('woff2');font-weight:800;font-display:swap}
 body{margin:0}
 a{color:#1b1b1a;text-decoration:none;border-bottom:1px solid #1b1b1a}
@@ -962,7 +961,7 @@ class Component extends DCLogic {
     // type
     const size = 112 - 64 * e;
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
-    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['700', 'Yang Zhi Ling', 'px "Fraunces X", serif', 1.22], ['800', '   ——   ']];
+    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', 'Yang Zhi Ling'], ['800', '   ——   ']];
     const sgFont = (sg) => sg[0] + ' ' + (size * (sg[3] || 1)).toFixed(2) + (sg[2] || fam);
     const o = off.getContext('2d');
     o.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1059,7 +1058,64 @@ class Component extends DCLogic {
       const wave = waveA * (0.7 * Math.sin(um * 3.4 + t * 1.2) + 0.3 * Math.sin(um * 8.1 - t * 1.7)) * (0.35 + 0.65 * (1 - um * um)) + gx * (10 + 26 * (this.mSpd || 0)) * dpr * Math.sin((x2 / dpr - M.sx) * 0.035 - t * 2.4);
       ctx.drawImage(mid, sx0, 0, Math.max(0.5, sx1 - sx0), H, x2, yc - yc * sc + wave, step + 0.6, H * sc);
     }
+    if (!window.__noglass) this.glassify(ctx, W, H, dpr, TOP, now);
     this.lensDrawn = true;
+  };
+
+  // turn the solid text mask on ctx into liquid glass: refracted, frosted backdrop + light rims + soft shadow
+  glassify = (ctx, W, H, dpr, TOP, now) => {
+    if (!this.glassA) { this.glassA = document.createElement('canvas'); this.glassB = document.createElement('canvas'); this.glassBk = document.createElement('canvas'); this.glassSh = document.createElement('canvas'); }
+    const A = this.glassA, B = this.glassB, K = this.glassBk, SH = this.glassSh;
+    const hw = Math.round(W / 2), hh = Math.round(H / 2), qw = Math.round(W / 6), qh = Math.round(H / 6);
+    if (A.width !== W || A.height !== H) { A.width = W; A.height = H; B.width = W; B.height = H; K.width = hw; K.height = hh; SH.width = qw; SH.height = qh; this.glassFr = 0; }
+    const a = A.getContext('2d'), b = B.getContext('2d');
+    a.setTransform(1, 0, 0, 1, 0, 0); a.globalCompositeOperation = 'source-over';
+    a.clearRect(0, 0, W, H); a.drawImage(ctx.canvas, 0, 0);
+    // backdrop: magnified, blurred, saturated copy of the background shapes (refreshed every few frames, half res)
+    if ((this.glassFr = (this.glassFr || 0) + 1) % 3 === 1) {
+      const k = K.getContext('2d');
+      k.setTransform(1, 0, 0, 1, 0, 0); k.filter = 'none'; k.globalCompositeOperation = 'source-over';
+      k.fillStyle = this.T().bg; k.fillRect(0, 0, hw, hh);
+      const bg = this.bg;
+      if (bg && bg.width) {
+        const S = bg.width / 1440, zoom = 1.12, drift = Math.sin(now * 0.0004) * 14;
+        const sw = 1440 / zoom, sh = 440 / zoom;
+        const sx = (1440 - sw) / 2 + drift, sy = TOP + (440 - sh) / 2 - 18;
+        k.filter = 'blur(2px) saturate(1.8) brightness(1.03)';
+        k.drawImage(bg, sx * S, sy * S, sw * S, sh * S, 0, 0, hw, hh);
+        k.filter = 'none';
+      }
+      const gr = k.createLinearGradient(0, 0, 0, hh);
+      gr.addColorStop(0, 'rgba(255,255,255,0.5)'); gr.addColorStop(0.45, 'rgba(255,255,255,0.12)'); gr.addColorStop(1, 'rgba(255,255,255,0.28)');
+      k.fillStyle = gr; k.fillRect(0, 0, hw, hh);
+      k.fillStyle = 'rgba(110,114,120,0.14)'; k.fillRect(0, 0, hw, hh);
+    }
+    b.setTransform(1, 0, 0, 1, 0, 0); b.globalCompositeOperation = 'source-over';
+    b.clearRect(0, 0, W, H); b.drawImage(K, 0, 0, W, H);
+    b.globalCompositeOperation = 'destination-in'; b.drawImage(A, 0, 0);
+    b.globalCompositeOperation = 'source-over';
+    // cheap soft shadow: mask shrunk and scaled back up
+    const sctx = SH.getContext('2d');
+    sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.clearRect(0, 0, qw, qh); sctx.drawImage(A, 0, 0, qw, qh);
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalAlpha = 0.13; ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(SH, 0, 12 * dpr, W, H);
+    ctx.globalAlpha = 1;
+    ctx.drawImage(B, 0, 0);
+    const rim = (dx, dy, col) => {
+      b.globalCompositeOperation = 'source-over'; b.clearRect(0, 0, W, H);
+      b.drawImage(A, 0, 0);
+      b.globalCompositeOperation = 'destination-out'; b.drawImage(A, dx, dy);
+      b.globalCompositeOperation = 'source-in'; b.fillStyle = col; b.fillRect(0, 0, W, H);
+      b.globalCompositeOperation = 'source-over';
+      ctx.drawImage(B, 0, 0);
+    };
+    rim(1.4 * dpr, 2.2 * dpr, 'rgba(255,255,255,0.95)');
+    rim(-1.2 * dpr, -1.8 * dpr, 'rgba(40,42,46,0.5)');
+    ctx.restore();
   };
 
   VH = () => (this.scroller && this.scroller.clientHeight) || 900;
@@ -1452,7 +1508,7 @@ class Component extends DCLogic {
     setTimeout(this.measure, 400);
     setTimeout(this.measure, 1500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
-    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('700 100px "Fraunces X"')]).then(this.measure, () => {});
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Archivo X"', 'Yang Zhi Ling')]).then(this.measure, () => {});
     this.raf = requestAnimationFrame(this.tick);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let back = null;
@@ -1504,7 +1560,7 @@ class Component extends DCLogic {
       ink: this.T().ink,
       muted: this.T().muted,
       line: this.T().line,
-      lensBlend: this.T().dark ? 'normal' : 'multiply',
+      lensBlend: 'normal',
       grainBlend: this.T().dark ? 'screen' : 'multiply',
       grainOp: this.T().dark ? (this.props.grain ?? 0.32) * 0.5 : (this.props.grain ?? 0.32),
       spacerH: this.state.spacerH,
