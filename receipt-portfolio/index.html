@@ -993,6 +993,7 @@ class Component extends DCLogic {
     const ey = 1 - Math.pow(1 - q, 2.2);
     const yb = 180 + (278 - 180) * ey;
     const fadeOthers = Math.pow(1 - e, 1.6);
+    const t0f = now * 0.001;
     let x = x0 - unit * Math.ceil((x0 + unit) / unit);
     let idx = Math.round((x - x0) / unit);
     while (x < CW + unit) {
@@ -1002,7 +1003,7 @@ class Component extends DCLogic {
         o.globalAlpha = (isLand && i === 0) ? 1 : fadeOthers;
         o.font = sgFont(segs[i]);
         if ('letterSpacing' in o) o.letterSpacing = ls.toFixed(2) + 'px';
-        if (o.globalAlpha > 0.003) o.fillText(segs[i][1], sx, yb);
+        if (o.globalAlpha > 0.003) this.flipText(o, segs[i][1], sx, yb, size, ls, t0f, e);
         sx += ws[i];
       }
       x += unit; idx++;
@@ -1062,6 +1063,49 @@ class Component extends DCLogic {
     this.lensDrawn = true;
   };
 
+  // draw text glyph by glyph; a flip wave sweeps across every few seconds and each letter turns over once
+  flipText = (o, str, sx, yb, size, ls, t, e) => {
+    const key = o.font + '|' + str + '|' + ls.toFixed(2);
+    this.flipCache = this.flipCache || {};
+    let pos = this.flipCache[key];
+    if (!pos) {
+      pos = [];
+      const chars = Array.from(str);
+      let acc = '';
+      for (let i = 0; i < chars.length; i++) { const x0 = o.measureText(acc).width; acc += chars[i]; pos.push([chars[i], x0, o.measureText(acc).width - x0]); }
+      const ks = Object.keys(this.flipCache); if (ks.length > 80) this.flipCache = {};
+      this.flipCache[key] = pos;
+    }
+    const period = 5.2, sweep = 1.5, spin = 0.7;
+    const ph = t % period;
+    const amt = 1 - e;
+    const cy = yb - size * 0.36;
+    const M = this.mouse;
+    for (let i = 0; i < pos.length; i++) {
+      const ch = pos[i][0];
+      if (ch === ' ') continue;
+      const gx = sx + pos[i][1], gw = pos[i][2], cx = gx + gw / 2;
+      // wave: letter at screen x starts turning when the front passes it
+      const start = (cx + 200) / (1440 + 400) * sweep;
+      let p = (ph - start) / spin;
+      let ang = 0;
+      if (p > 0 && p < 1) { const q = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; ang = q * Math.PI; }
+      // pointer nudge: letters right under the cursor tilt a little
+      if (M && M.on > 0.05) {
+        const dx = (M.sx - cx) / 120, dy = (M.sy - (210 + cy)) / 140;
+        ang += 0.55 * M.on * Math.exp(-(dx * dx + dy * dy));
+      }
+      ang *= amt;
+      if (Math.abs(ang) < 0.002) { o.fillText(ch, gx, yb); continue; }
+      const cs = Math.cos(ang), sn = Math.sin(ang);
+      o.save();
+      o.translate(cx, cy);
+      o.transform(1 - 0.06 * Math.abs(sn), 0, 0.12 * sn * Math.sign(cs || 1), Math.max(0.04, Math.abs(cs)), 0, 0);
+      o.fillText(ch, -gw / 2, yb - cy);
+      o.restore();
+    }
+  };
+
   // turn the solid text mask on ctx into liquid glass: refracted, frosted backdrop + light rims + soft shadow
   glassify = (ctx, W, H, dpr, TOP, now) => {
     if (!this.glassA) { this.glassA = document.createElement('canvas'); this.glassB = document.createElement('canvas'); this.glassBk = document.createElement('canvas'); this.glassSh = document.createElement('canvas'); }
@@ -1101,7 +1145,7 @@ class Component extends DCLogic {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.globalCompositeOperation = 'source-over';
     ctx.clearRect(0, 0, W, H);
-    ctx.globalAlpha = 0.13; ctx.imageSmoothingQuality = 'high';
+    ctx.globalAlpha = 0.08; ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(SH, 0, 12 * dpr, W, H);
     ctx.globalAlpha = 1;
     ctx.drawImage(B, 0, 0);
@@ -1113,8 +1157,8 @@ class Component extends DCLogic {
       b.globalCompositeOperation = 'source-over';
       ctx.drawImage(B, 0, 0);
     };
-    rim(1.4 * dpr, 2.2 * dpr, 'rgba(255,255,255,0.95)');
-    rim(-1.2 * dpr, -1.8 * dpr, 'rgba(40,42,46,0.5)');
+    rim(1 * dpr, 1.6 * dpr, 'rgba(255,255,255,0.9)');
+    rim(-0.7 * dpr, -1 * dpr, 'rgba(60,62,66,0.16)');
     ctx.restore();
   };
 
