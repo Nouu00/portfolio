@@ -163,7 +163,7 @@ class Component extends DCLogic {
 
   dragStart = (e) => {
     const el = this.scroller;
-    if (!el || e.button > 0) return;
+    if (!el || e.button > 0 || this.MOB) return;
     const r = el.getBoundingClientRect();
     const sc = r.width / (el.offsetWidth || 1);
     const y = (e.clientY - r.top) / sc;
@@ -451,7 +451,7 @@ class Component extends DCLogic {
       geo.push({ k: kinds[Math.floor(Math.random() * kinds.length)], a: ang, d: 26 + Math.random() * 46, s: 5 + Math.random() * 8, r0: Math.random() * 6.28, rv: (Math.random() - 0.5) * 2.4, c: greys[Math.floor(Math.random() * greys.length)], dl: Math.random() * 0.12 });
     }
     this.clicks.push({ x: x, y: y, t0: performance.now(), parts: parts, geo: geo });
-    if (!onUi && this.themeKey() === 'blueprint' || !onUi && this.themeKey() === 'bauhaus') this.addBody(x, y);
+    if (!this.MOB && (!onUi && this.themeKey() === 'blueprint' || !onUi && this.themeKey() === 'bauhaus')) this.addBody(x, y);
     if (this.clicks.length > 6) this.clicks.shift();
     this.fold = (this.fold || 0) + 0.9;
     this.cardK = (this.cardK || 0) + 0.7;
