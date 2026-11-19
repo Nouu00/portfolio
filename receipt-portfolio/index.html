@@ -959,56 +959,51 @@ class Component extends DCLogic {
     const sqT = Math.max(0.08, 0.1 + 0.9 * enterE);
     this.lensSquash += (sqT - this.lensSquash) * 0.07;
     // type
-    const size = 112 - 64 * e;
+    // stacked rows that turn like cube faces (left-right) to reveal the next set of words
+    const size = 96 - 36 * e;
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
-    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', 'Yang Zhi Ling'], ['800', '   ——   ']];
-    const sgFont = (sg) => sg[0] + ' ' + (size * (sg[3] || 1)).toFixed(2) + (sg[2] || fam);
     const o = off.getContext('2d');
     o.setTransform(dpr, 0, 0, dpr, 0, 0);
     o.clearRect(0, 0, CW, CH);
     o.fillStyle = this.T().ink;
     o.textBaseline = 'alphabetic';
-    const ls = -0.02 * size;
-    let unit = 0;
-    const ws = segs.map((sg) => {
-      o.font = sgFont(sg);
-      if ('letterSpacing' in o) o.letterSpacing = ls.toFixed(2) + 'px';
-      const w = o.measureText(sg[1]).width; unit += w; return w;
-    });
-    if (unit <= 0) return;
+    o.font = '800 ' + size.toFixed(2) + fam;
+    // faces: each row is [text, tracking in em]
+    const FACES = [
+      [['YANG ZHI LING', -0.02], ['UX / VISUAL', -0.02], ['R E S E A R C H', 0]],
+      [['PROBLEM', -0.02], ['F I R S T ,', 0], ['PIXELS LATER', -0.02]],
+      [['OPEN TO', -0.02], ['U I / U X', 0], ['INTERNSHIP', -0.02]]
+    ];
+    const hold = 2.8, flip = 0.8, stag = 0.16;
+    const cyc = FACES.length * hold;
     const D = this.drag;
     if (!D.on) { D.off += D.v; D.v *= 0.94; if (Math.abs(D.v) < 0.02) D.v = 0; }
-    const free = ((this.lensShift + D.off + scroll * 0.9) % unit + unit) % unit;
-    if (e <= 0.0005) { this.land = null; }
-    else if (!this.land) {
-      const n = Math.round((40 + free) / unit);
-      this.land = { base: free, n: n };
+    // dragging sideways or scrolling nudges the turning forward / back
+    const tt = now * 0.001 + D.off * 0.006;
+    const lh = size * 1.02;
+    const yb = 220 + size * 0.35 - e * 20;
+    const mw = (t, tr) => { if ('letterSpacing' in o) o.letterSpacing = (tr * size).toFixed(2) + 'px'; return o.measureText(t).width; };
+    const drawFace = (t, tr, x, y, sx) => {
+      if (sx < 0.012) return;
+      if ('letterSpacing' in o) o.letterSpacing = (tr * size).toFixed(2) + 'px';
+      o.save(); o.translate(x, y); o.scale(sx, 1); o.fillText(t, 0, 0); o.restore();
+    };
+    for (let r = 0; r < 3; r++) {
+      const local = ((tt - r * stag) % cyc + cyc) % cyc;
+      const fi = Math.floor(local / hold);
+      const inFace = local - fi * hold;
+      const cur = FACES[fi][r], nxt = FACES[(fi + 1) % FACES.length][r];
+      const p = Math.max(0, Math.min(1, (inFace - (hold - flip)) / flip));
+      const pe = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+      const th = pe * Math.PI / 2;
+      const wo = mw(cur[0], cur[1]), wn = mw(nxt[0], nxt[1]);
+      const co = Math.cos(th), si = Math.sin(th);
+      const x = (CW - (wn * si + wo * co)) / 2;
+      const y = yb + (r - 1) * lh;
+      // the new face swings in from the left while the old one turns away to the right
+      drawFace(nxt[0], nxt[1], x, y, si);
+      drawFace(cur[0], cur[1], x + wn * si, y, co);
     }
-    let x0;
-    if (this.land) {
-      const tgt = 40 - this.land.n * unit;
-      const ex = q < 0.5 ? 4 * q * q * q : 1 - Math.pow(-2 * q + 2, 3) / 2;
-      x0 = -this.land.base + (tgt + this.land.base) * Math.pow(ex, 1.25);
-    } else x0 = -free;
-    const ey = 1 - Math.pow(1 - q, 2.2);
-    const yb = 180 + (278 - 180) * ey;
-    const fadeOthers = Math.pow(1 - e, 1.6);
-    const t0f = now * 0.001;
-    let x = x0 - unit * Math.ceil((x0 + unit) / unit);
-    let idx = Math.round((x - x0) / unit);
-    while (x < CW + unit) {
-      const isLand = this.land && idx === this.land.n;
-      let sx = x;
-      for (let i = 0; i < segs.length; i++) {
-        o.globalAlpha = (isLand && i === 0) ? 1 : fadeOthers;
-        o.font = sgFont(segs[i]);
-        if ('letterSpacing' in o) o.letterSpacing = ls.toFixed(2) + 'px';
-        if (o.globalAlpha > 0.003) this.flipText(o, segs[i][1], sx, yb, size, ls, t0f, e);
-        sx += ws[i];
-      }
-      x += unit; idx++;
-    }
-    o.globalAlpha = 1;
     if ('letterSpacing' in o) o.letterSpacing = '0px';
     const t = now * 0.001;
     const near = M.on * Math.exp(-Math.pow((M.sy - (TOP + yb - size * 0.35)) / 230, 2)) * (1 - e);
