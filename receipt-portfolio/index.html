@@ -21,6 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;family=Inter+Tight:wght@300;400;500&amp;family=Barlow+Condensed:wght@300;600&amp;family=Noto+Sans+TC:wght@300;400;500;700;800&amp;display=swap">
 <style>
+@font-face{font-family:'Fraunces X';src:url(images/fraunces-x.woff2) format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'Archivo X';src:url(images/archivo-x.woff2) format('woff2');font-weight:800;font-display:swap}
 body{margin:0}
 a{color:#1b1b1a;text-decoration:none;border-bottom:1px solid #1b1b1a}
@@ -961,7 +962,8 @@ class Component extends DCLogic {
     // type
     const size = 112 - 64 * e;
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
-    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', '楊芷翎'], ['800', '   ——   ']];
+    const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['700', 'Yang Zhi Ling', 'px "Fraunces X", serif', 1.22], ['800', '   ——   ']];
+    const sgFont = (sg) => sg[0] + ' ' + (size * (sg[3] || 1)).toFixed(2) + (sg[2] || fam);
     const o = off.getContext('2d');
     o.setTransform(dpr, 0, 0, dpr, 0, 0);
     o.clearRect(0, 0, CW, CH);
@@ -970,7 +972,7 @@ class Component extends DCLogic {
     const ls = -0.02 * size;
     let unit = 0;
     const ws = segs.map((sg) => {
-      o.font = sg[0] + ' ' + size.toFixed(2) + fam;
+      o.font = sgFont(sg);
       if ('letterSpacing' in o) o.letterSpacing = ls.toFixed(2) + 'px';
       const w = o.measureText(sg[1]).width; unit += w; return w;
     });
@@ -999,7 +1001,7 @@ class Component extends DCLogic {
       let sx = x;
       for (let i = 0; i < segs.length; i++) {
         o.globalAlpha = (isLand && i === 0) ? 1 : fadeOthers;
-        o.font = segs[i][0] + ' ' + size.toFixed(2) + fam;
+        o.font = sgFont(segs[i]);
         if ('letterSpacing' in o) o.letterSpacing = ls.toFixed(2) + 'px';
         if (o.globalAlpha > 0.003) o.fillText(segs[i][1], sx, yb);
         sx += ws[i];
@@ -1450,7 +1452,7 @@ class Component extends DCLogic {
     setTimeout(this.measure, 400);
     setTimeout(this.measure, 1500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
-    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Noto Sans TC"', '楊芷翎')]).then(this.measure, () => {});
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('700 100px "Fraunces X"')]).then(this.measure, () => {});
     this.raf = requestAnimationFrame(this.tick);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let back = null;
