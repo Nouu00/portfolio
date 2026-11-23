@@ -1021,7 +1021,7 @@ class Component extends DCLogic {
     this.lensSquash += (sqT - this.lensSquash) * 0.07;
     // type
     // type
-    const size = (112 - 64 * e) * this.LS;
+    const size = (112 - 64 * e) * this.LS * (this.T().quiet ? 2.3 : 1);
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
     const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', 'Yang Zhi Ling'], ['800', '   ——   ']];
     const o = off.getContext('2d');
@@ -1080,7 +1080,38 @@ class Component extends DCLogic {
       const qc = c.getContext('2d');
       qc.setTransform(1, 0, 0, 1, 0, 0); qc.globalCompositeOperation = 'source-over';
       qc.clearRect(0, 0, W, H);
-      qc.globalAlpha = op; qc.drawImage(off, 0, 0); qc.globalAlpha = 1;
+      qc.globalAlpha = op;
+      // reeded glass in front of the type: every rib shows a squeezed slice of the words behind it
+      const fl = 1 - this.smooth(0.55, 0.95, e);
+      if (fl < 0.01) { qc.drawImage(off, 0, 0); }
+      else {
+        const R = Math.max(10, Math.round(38 * dpr * (this.MOB ? 0.7 : 1)));
+        const st = Math.max(1, Math.round(dpr));
+        const A = 1.2, SA = Math.sin(A);
+        const mag = 2.4 * fl;
+        for (let x = 0; x < W; x += R) {
+          const w = Math.min(R, W - x), cx = x + w / 2;
+          const persp = (cx - W / 2) * 0.06 * fl;
+          // each rib is a small cylinder lens: columns near its edges look further sideways
+          for (let dx = 0; dx < w; dx += st) {
+            const u = ((dx + st / 2) / w) * 2 - 1;
+            const bend = Math.asin(Math.max(-1, Math.min(1, u * SA))) / A;
+            const sx = cx + persp + bend * (w / 2) * (1 + mag);
+            qc.drawImage(off, sx, 0, st, H, x + dx, 0, st, H);
+          }
+        }
+        // light & shade on the glyphs only: each rib is brighter on its left, darker on its right
+        qc.globalCompositeOperation = 'source-atop';
+        const g = qc.createLinearGradient(0, 0, R, 0);
+        g.addColorStop(0, 'rgba(255,255,255,' + (0.38 * fl).toFixed(3) + ')');
+        g.addColorStop(0.18, 'rgba(255,255,255,0)');
+        g.addColorStop(0.75, 'rgba(0,0,0,0)');
+        g.addColorStop(1, 'rgba(0,0,0,' + (0.28 * fl).toFixed(3) + ')');
+        qc.fillStyle = g;
+        for (let x = 0; x < W; x += R) { qc.save(); qc.translate(x, 0); qc.fillRect(0, 0, R, H); qc.restore(); }
+        qc.globalCompositeOperation = 'source-over';
+      }
+      qc.globalAlpha = 1;
       this.lensDrawn = true;
       return;
     }
