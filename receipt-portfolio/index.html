@@ -25,6 +25,7 @@
 <style>
 .lightfx{animation:lfin 2.4s ease 1.6s both}.lightfx i{position:absolute;inset:0;background:url(images/window-bg.webp) center/100% 100% no-repeat;animation:lbreathe 9s ease-in-out infinite alternate}@keyframes lfin{from{opacity:0}to{opacity:1}}@keyframes lbreathe{from{opacity:.82}to{opacity:1}}@media (prefers-reduced-motion: reduce){.lightfx i{animation:none}}
 [data-pic]{z-index:2}
+@font-face{font-family:'Archivo V';src:url(images/archivo-var.woff2) format('woff2');font-weight:100 900;font-display:swap}
 @font-face{font-family:'Archivo X';src:url(images/archivo-x.woff2) format('woff2');font-weight:800;font-display:swap}
 body{margin:0}
 a{color:#1b1b1a;text-decoration:none;border-bottom:1px solid #1b1b1a}
@@ -551,6 +552,7 @@ class Component extends DCLogic {
     c.width = Math.round(CW * dpr); c.height = Math.round(CH * dpr);
     const ctx = c.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (this.T().quiet) { this.drawPrinterQuiet(ctx, BW, CW, CH, OX, OY, BH); return; }
     const grain = (w, h, fn) => {
       const tc = document.createElement('canvas');
       tc.width = Math.round(w * dpr); tc.height = Math.round(h * dpr);
@@ -599,6 +601,38 @@ class Component extends DCLogic {
     ctx.fillStyle = 'rgba(232,246,247,0.35)';
     const gw = (BW - 72) / 6;
     for (let i = 0; i < 6; i++) ctx.fillRect(OX + 36 + i * gw, OY + 104, gw - 9, 2);
+  };
+
+  // quiet printer: smooth, pale, softly lit object (no grain)
+  drawPrinterQuiet = (ctx, BW, CW, CH, OX, OY, BH) => {
+    ctx.clearRect(0, 0, CW, CH);
+    const rr = (x, y, w, h, r) => { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h); ctx.lineTo(x, y + h); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath(); };
+    // ambient shadow around the body
+    ctx.save();
+    ctx.shadowColor = 'rgba(40,38,34,0.16)'; ctx.shadowBlur = 26; ctx.shadowOffsetY = 4;
+    rr(OX, OY, BW, BH + 30, 30); ctx.fillStyle = '#e4e2dd'; ctx.fill();
+    ctx.restore();
+    ctx.save(); rr(OX, OY, BW, BH + 30, 30); ctx.clip();
+    // body: light from the upper left
+    const gv = ctx.createLinearGradient(0, OY, 0, OY + BH);
+    gv.addColorStop(0, '#f7f6f3'); gv.addColorStop(0.32, '#ebe9e4'); gv.addColorStop(1, '#d6d3cd');
+    ctx.fillStyle = gv; ctx.fillRect(OX, OY, BW, BH + 30);
+    const gh = ctx.createLinearGradient(OX, 0, OX + BW, 0);
+    gh.addColorStop(0, 'rgba(255,255,255,0.35)'); gh.addColorStop(0.45, 'rgba(255,255,255,0)'); gh.addColorStop(1, 'rgba(60,56,50,0.10)');
+    ctx.fillStyle = gh; ctx.fillRect(OX, OY, BW, BH + 30);
+    // soft top bevel
+    const gb = ctx.createLinearGradient(0, OY, 0, OY + 14);
+    gb.addColorStop(0, 'rgba(255,255,255,0.95)'); gb.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gb; ctx.fillRect(OX, OY, BW, 14);
+    // a quiet seam between top and front
+    ctx.fillStyle = 'rgba(60,56,50,0.10)'; ctx.fillRect(OX + 22, OY + 50, BW - 44, 1);
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fillRect(OX + 22, OY + 51, BW - 44, 1);
+    ctx.restore();
+    // slot: a thin dark line with a soft lip below
+    const sg = ctx.createLinearGradient(0, OY + 25, 0, OY + 32);
+    sg.addColorStop(0, '#1d1c1a'); sg.addColorStop(1, '#3a3834');
+    ctx.fillStyle = sg; rr(OX + 45, OY + 25, BW - 90, 7, 3.5); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.fillRect(OX + 48, OY + 33, BW - 96, 1);
   };
 
   // seconds since the page was revealed after the loading mask (negative while loading)
@@ -1029,6 +1063,16 @@ class Component extends DCLogic {
     o.clearRect(0, 0, CW, CH);
     o.fillStyle = this.T().ink;
     o.textBaseline = 'alphabetic';
+    if (this.T().quiet) {
+      // quiet: still type; letters rise in, a weight wave travels through them
+      this.drawHeroType(o, CW, CH, now, e);
+      const qc = c.getContext('2d');
+      qc.setTransform(1, 0, 0, 1, 0, 0); qc.globalCompositeOperation = 'source-over';
+      qc.clearRect(0, 0, W, H);
+      qc.globalAlpha = 1 - this.smooth(0.45, 0.85, e); qc.drawImage(off, 0, 0); qc.globalAlpha = 1;
+      this.lensDrawn = true;
+      return;
+    }
     const ls = -0.02 * size;
     let unit = 0;
     const ws = segs.map((sg) => {
@@ -1135,6 +1179,77 @@ class Component extends DCLogic {
     }
     if (!window.__noglass) this.glassify(ctx, W, H, dpr, TOP, now);
     this.lensDrawn = true;
+  };
+
+  // ---- quiet hero type: light, still, with a travelling weight wave ----
+  drawHeroType = (o, CW, CH, now, e) => {
+    const ra = this.revealAge(now);
+    const ink = this.T().ink;
+    const M = this.mouse;
+    const lines = this.MOB ? [['Yang', 0], ['Zhi Ling', 1]] : [['Yang Zhi Ling', 0]];
+    const size = this.MOB ? 92 : 132;
+    const lh = size * 0.98;
+    const base = 240, peak = 820;
+    const t = now * 0.001;
+    // the wave: idles across every few seconds, and is pushed through by scrolling
+    const idle = ((Math.max(0, ra - 2.2)) % 5.5) / 1.9;          // 0..~2.9, active while < 1.25
+    const scrollW = this.smooth(0, 0.45, e) * 1.5 - 0.15;          // sweeps while the page starts to scroll
+    const fam = 'px "Archivo V", "Archivo X", "Noto Sans TC", sans-serif';
+    const totalH = lines.length * lh;
+    let li = 0, gi = 0;
+    const nChars = lines.reduce((a, l) => a + l[0].length, 0);
+    for (const [txt] of lines) {
+      // weights per character
+      const chars = Array.from(txt);
+      const ws = chars.map((ch, i) => {
+        const u = (gi + i) / Math.max(1, nChars - 1);
+        let w = 0;
+        const f1 = idle - 0.12 - u * 0.9; w = Math.max(w, Math.exp(-f1 * f1 / 0.018));
+        if (e > 0.001) { const f2 = scrollW - u; w = Math.max(w, Math.exp(-f2 * f2 / 0.02)); }
+        return w;
+      });
+      // pointer nearby thickens letters a little
+      const y = CH / 2 - totalH / 2 + lh * (li + 0.78) - e * 20;
+      let widths = [], tot = 0;
+      for (let i = 0; i < chars.length; i++) {
+        const wt = Math.round(base + (peak - base) * ws[i]);
+        o.font = wt + ' ' + size + fam;
+        if ('letterSpacing' in o) o.letterSpacing = (-0.03 * size) + 'px';
+        const w = o.measureText(chars[i]).width; widths.push(w); tot += w;
+      }
+      let x = (CW - tot) / 2;
+      for (let i = 0; i < chars.length; i++) {
+        const cx = x + widths[i] / 2;
+        let wv = ws[i];
+        if (M && M.on > 0.05) {
+          const dx = (M.sx - cx) / 160, dy = (M.sy - (this.LTOP + y - size * 0.35)) / 160;
+          wv = Math.max(wv, 0.55 * M.on * Math.exp(-(dx * dx + dy * dy)));
+        }
+        const wt = Math.round(base + (peak - base) * wv);
+        const rin = Math.max(0, Math.min(1, (ra - 0.95 - (gi + i) * 0.045) / 0.8));
+        const ri = 1 - Math.pow(1 - rin, 4);
+        o.globalAlpha = ri;
+        o.font = wt + ' ' + size + fam;
+        if ('letterSpacing' in o) o.letterSpacing = (-0.03 * size) + 'px';
+        o.fillStyle = ink;
+        o.fillText(chars[i], x, y + (1 - ri) * size * 0.6);
+        x += widths[i];
+      }
+      gi += chars.length; li++;
+    }
+    // small caption under the name
+    const capA = Math.max(0, Math.min(1, (ra - 1.7) / 0.8)) * (1 - this.smooth(0, 0.3, e));
+    if (capA > 0.01) {
+      o.globalAlpha = capA;
+      o.font = '500 ' + (this.MOB ? 12 : 14) + 'px "IBM Plex Mono", monospace';
+      if ('letterSpacing' in o) o.letterSpacing = (this.MOB ? 2.4 : 4.2) + 'px';
+      o.fillStyle = 'rgba(27,27,26,0.55)';
+      const cap = 'UX  /  VISUAL  /  RESEARCH';
+      const cw = o.measureText(cap).width;
+      o.fillText(cap, (CW - cw) / 2, CH / 2 + totalH / 2 + (this.MOB ? 34 : 44));
+    }
+    o.globalAlpha = 1;
+    if ('letterSpacing' in o) o.letterSpacing = '0px';
   };
 
   // turn the solid text mask on ctx into liquid glass: refracted, frosted backdrop + light rims + soft shadow
@@ -1391,8 +1506,9 @@ class Component extends DCLogic {
       pl.style.transform = 'translate3d(' + (-px).toFixed(1) + 'px,' + (-py).toFixed(1) + 'px,0)';
     }
     if (this.led) {
-      this.led.style.background = moving ? '#f2f2f2' : '#5a5a5a';
-      this.led.style.boxShadow = moving ? '0 0 12px rgba(255,255,255,.9)' : 'none';
+      const qt = this.T().quiet;
+      this.led.style.background = moving ? (qt ? '#e87040' : '#f2f2f2') : (qt ? '#c9c6bf' : '#5a5a5a');
+      this.led.style.boxShadow = moving ? (qt ? '0 0 10px rgba(232,112,64,.6)' : '0 0 12px rgba(255,255,255,.9)') : 'none';
     }
     if (this.ledTop) this.ledTop.style.background = moving ? '#1b1b1a' : '#b9b5ad';
     const pct = Math.min(100, Math.round((printed / this.paperH) * 100));
@@ -1604,7 +1720,7 @@ class Component extends DCLogic {
     setTimeout(this.measure, 400);
     setTimeout(this.measure, 1500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
-    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Archivo X"', 'Yang Zhi Ling')]).then(this.measure, () => {});
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 100px "Archivo V"'), document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Archivo X"', 'Yang Zhi Ling')]).then(this.measure, () => {});
     this.raf = requestAnimationFrame(this.tick);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let back = null;
