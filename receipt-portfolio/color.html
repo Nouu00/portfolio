@@ -25,6 +25,7 @@
 <style>
 .lightfx{animation:lfin 2.4s ease 1.6s both}.lightfx i{position:absolute;inset:0;background:url(images/window-bg.webp) center/100% 100% no-repeat;animation:lbreathe 9s ease-in-out infinite alternate}@keyframes lfin{from{opacity:0}to{opacity:1}}@keyframes lbreathe{from{opacity:.82}to{opacity:1}}@media (prefers-reduced-motion: reduce){.lightfx i{animation:none}}
 [data-pic]{z-index:2}
+@font-face{font-family:'Inter V';src:url(images/intertight-var.woff2) format('woff2');font-weight:100 900;font-display:swap}
 @font-face{font-family:'Archivo V';src:url(images/archivo-var.woff2) format('woff2');font-weight:100 900;font-display:swap}
 @font-face{font-family:'Archivo X';src:url(images/archivo-x.woff2) format('woff2');font-weight:800;font-display:swap}
 body{margin:0}
@@ -1184,72 +1185,79 @@ class Component extends DCLogic {
   // ---- quiet hero type: light, still, with a travelling weight wave ----
   drawHeroType = (o, CW, CH, now, e) => {
     const ra = this.revealAge(now);
-    const ink = this.T().ink;
     const M = this.mouse;
     const lines = this.MOB ? [['Yang', 0], ['Zhi Ling', 1]] : [['Yang Zhi Ling', 0]];
-    const size = this.MOB ? 92 : 132;
-    const lh = size * 0.98;
-    const base = 240, peak = 820;
-    const t = now * 0.001;
-    // the wave: idles across every few seconds, and is pushed through by scrolling
-    const idle = ((Math.max(0, ra - 2.2)) % 5.5) / 1.9;          // 0..~2.9, active while < 1.25
-    const scrollW = this.smooth(0, 0.45, e) * 1.5 - 0.15;          // sweeps while the page starts to scroll
-    const fam = 'px "Archivo V", "Archivo X", "Noto Sans TC", sans-serif';
-    const totalH = lines.length * lh;
-    let li = 0, gi = 0;
+    const size = this.MOB ? 58 : 86;
+    const lh = size * 1.02;
+    const base = 220, peak = 480;
+    const idle = ((Math.max(0, ra - 2.2)) % 6) / 2.2;
+    const scrollW = this.smooth(0, 0.45, e) * 1.5 - 0.15;
+    const fam = 'px "Inter V", "Inter Tight", "Noto Sans TC", sans-serif';
+    const left = this.MOB ? 22 : 64;
+    const bottom = this.MOB ? CH - 70 : CH - 96;
     const nChars = lines.reduce((a, l) => a + l[0].length, 0);
-    for (const [txt] of lines) {
-      // weights per character
+    const ink = 'rgb(74,71,65)';
+    let gi = 0;
+    for (let li = 0; li < lines.length; li++) {
+      const txt = lines[li][0];
       const chars = Array.from(txt);
-      const ws = chars.map((ch, i) => {
+      const y = bottom - (lines.length - 1 - li) * lh - e * 16;
+      let x = left;
+      for (let i = 0; i < chars.length; i++) {
         const u = (gi + i) / Math.max(1, nChars - 1);
-        let w = 0;
-        const f1 = idle - 0.12 - u * 0.9; w = Math.max(w, Math.exp(-f1 * f1 / 0.018));
-        if (e > 0.001) { const f2 = scrollW - u; w = Math.max(w, Math.exp(-f2 * f2 / 0.02)); }
-        return w;
-      });
-      // pointer nearby thickens letters a little
-      const y = CH / 2 - totalH / 2 + lh * (li + 0.78) - e * 20;
-      let widths = [], tot = 0;
-      for (let i = 0; i < chars.length; i++) {
-        const wt = Math.round(base + (peak - base) * ws[i]);
-        o.font = wt + ' ' + size + fam;
-        if ('letterSpacing' in o) o.letterSpacing = (-0.03 * size) + 'px';
-        const w = o.measureText(chars[i]).width; widths.push(w); tot += w;
-      }
-      let x = (CW - tot) / 2;
-      for (let i = 0; i < chars.length; i++) {
-        const cx = x + widths[i] / 2;
-        let wv = ws[i];
+        let wv = 0;
+        const f1 = idle - 0.12 - u * 0.9; wv = Math.max(wv, Math.exp(-f1 * f1 / 0.02));
+        if (e > 0.001) { const f2 = scrollW - u; wv = Math.max(wv, Math.exp(-f2 * f2 / 0.02)); }
         if (M && M.on > 0.05) {
-          const dx = (M.sx - cx) / 160, dy = (M.sy - (this.LTOP + y - size * 0.35)) / 160;
-          wv = Math.max(wv, 0.55 * M.on * Math.exp(-(dx * dx + dy * dy)));
+          const dx = (M.sx - (x + size * 0.3)) / 150, dy = (M.sy - (this.LTOP + y - size * 0.35)) / 150;
+          wv = Math.max(wv, 0.6 * M.on * Math.exp(-(dx * dx + dy * dy)));
         }
         const wt = Math.round(base + (peak - base) * wv);
-        const rin = Math.max(0, Math.min(1, (ra - 0.95 - (gi + i) * 0.045) / 0.8));
+        o.font = wt + ' ' + size + fam;
+        if ('letterSpacing' in o) o.letterSpacing = (-0.025 * size) + 'px';
+        const w = o.measureText(chars[i]).width;
+        const rin = Math.max(0, Math.min(1, (ra - 0.95 - (gi + i) * 0.04) / 0.8));
         const ri = 1 - Math.pow(1 - rin, 4);
         o.globalAlpha = ri;
-        o.font = wt + ' ' + size + fam;
-        if ('letterSpacing' in o) o.letterSpacing = (-0.03 * size) + 'px';
         o.fillStyle = ink;
-        o.fillText(chars[i], x, y + (1 - ri) * size * 0.6);
-        x += widths[i];
+        o.fillText(chars[i], x, y + (1 - ri) * size * 0.5);
+        x += w;
       }
-      gi += chars.length; li++;
+      gi += chars.length;
     }
-    // small caption under the name
     const capA = Math.max(0, Math.min(1, (ra - 1.7) / 0.8)) * (1 - this.smooth(0, 0.3, e));
     if (capA > 0.01) {
       o.globalAlpha = capA;
-      o.font = '500 ' + (this.MOB ? 12 : 14) + 'px "IBM Plex Mono", monospace';
-      if ('letterSpacing' in o) o.letterSpacing = (this.MOB ? 2.4 : 4.2) + 'px';
-      o.fillStyle = 'rgba(27,27,26,0.55)';
-      const cap = 'UX  /  VISUAL  /  RESEARCH';
-      const cw = o.measureText(cap).width;
-      o.fillText(cap, (CW - cw) / 2, CH / 2 + totalH / 2 + (this.MOB ? 34 : 44));
+      o.font = '400 ' + (this.MOB ? 11 : 12.5) + 'px "IBM Plex Mono", monospace';
+      if ('letterSpacing' in o) o.letterSpacing = (this.MOB ? 2 : 3.2) + 'px';
+      o.fillStyle = 'rgba(74,71,65,0.6)';
+      o.fillText('UX / VISUAL / RESEARCH', left + 2, bottom + (this.MOB ? 30 : 38));
     }
     o.globalAlpha = 1;
     if ('letterSpacing' in o) o.letterSpacing = '0px';
+    // window light falls across the letters: lit parts get paler
+    const img = this.lightImg();
+    if (img && img.complete && img.naturalWidth) {
+      const VH = this.VH();
+      let dw = this.SW, dh = VH, dx = 0, dy = 0;
+      if (this.MOB) { const sc = Math.max(this.SW / img.naturalWidth, VH / img.naturalHeight); dw = img.naturalWidth * sc; dh = img.naturalHeight * sc; dx = (this.SW - dw) / 2; dy = (VH - dh) / 2; }
+      o.save();
+      o.globalCompositeOperation = 'source-atop';
+      o.globalAlpha = this.MOB ? 0.55 : 0.9;
+      o.drawImage(img, dx, dy - this.LTOP, dw, dh);
+      if (!this.MOB) o.drawImage(img, dx, dy - this.LTOP, dw, dh);
+      o.restore();
+    }
+  };
+  lightImg = () => {
+    if (this._lightImg !== undefined) return this._lightImg;
+    this._lightImg = null;
+    try {
+      const el = document.querySelector('.lightfx i');
+      const m = el && getComputedStyle(el).backgroundImage.match(/url\("?([^")]+)"?\)/);
+      if (m) { const im = new Image(); im.src = m[1]; this._lightImg = im; }
+    } catch (err) {}
+    return this._lightImg;
   };
 
   // turn the solid text mask on ctx into liquid glass: refracted, frosted backdrop + light rims + soft shadow
@@ -1720,7 +1728,7 @@ class Component extends DCLogic {
     setTimeout(this.measure, 400);
     setTimeout(this.measure, 1500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
-    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 100px "Archivo V"'), document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Archivo X"', 'Yang Zhi Ling')]).then(this.measure, () => {});
+    if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('300 100px "Archivo V"'), document.fonts.load('300 100px "Inter V"'), document.fonts.load('800 100px "Archivo X"'), document.fonts.load('800 100px "Archivo X"', 'Yang Zhi Ling')]).then(this.measure, () => {});
     this.raf = requestAnimationFrame(this.tick);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let back = null;
