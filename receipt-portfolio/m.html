@@ -409,6 +409,7 @@ class Component extends DCLogic {
     riso: { bg: '#f2ede2', ink: '#1d2340', muted: '#3c4060', line: '#d6cfc0', dark: false, res: 1 },
     night: { bg: '#141413', ink: '#ecebe6', muted: '#a8a49c', line: '#34332f', dark: true, res: 0.5 },
     topo: { bg: '#e3e7e9', ink: '#17222d', muted: '#4a5561', line: '#c4ccd2', dark: false, res: 1 },
+    quiet: { bg: '#e9e7e2', ink: '#1f1e1c', muted: '#3d3b37', line: '#c9c5bd', dark: false, res: 0.5, pal: ['150,147,140', '190,187,180', '232,112,64', '27,27,26'], aMul: 1, quiet: true, accent: '#e87040' },
     mesh: { bg: '#eee8e2', ink: '#1b1b1a', muted: '#3d3b37', line: '#d3cbc2', dark: false, res: 0.5 }
   };
   T = () => this.THEMES[this.props.theme ?? this.DEFAULT_THEME] || this.THEMES.blueprint;
@@ -623,6 +624,7 @@ class Component extends DCLogic {
     else if (k === 'night') this.bgNight(ctx, S, t, m);
     else if (k === 'topo') this.bgTopo(ctx, S, t, m);
     else if (k === 'mesh') this.bgMesh(ctx, S, t, m);
+    else if (th.quiet) { /* plain paper-grey wall: only the window light */ }
     else this.bgShapes(ctx, S, t, m);
     ctx.filter = 'none';
     ctx.globalCompositeOperation = 'source-over';
@@ -1073,6 +1075,15 @@ class Component extends DCLogic {
     }
     o.globalAlpha = 1;
     if ('letterSpacing' in o) o.letterSpacing = '0px';
+    if (this.T().quiet) {
+      // quiet: clean solid type, no glass / fisheye / refraction
+      const qc = c.getContext('2d');
+      qc.setTransform(1, 0, 0, 1, 0, 0); qc.globalCompositeOperation = 'source-over';
+      qc.clearRect(0, 0, W, H);
+      qc.globalAlpha = op; qc.drawImage(off, 0, 0); qc.globalAlpha = 1;
+      this.lensDrawn = true;
+      return;
+    }
     const t = now * 0.001;
     const near = M.on * Math.exp(-Math.pow((M.sy - (TOP + yb - size * 0.35)) / 230, 2)) * (1 - e);
     // pass 1: fluted-glass refraction
@@ -1638,7 +1649,7 @@ class Component extends DCLogic {
       bars.push({ w: w + 'px', g: g + 'px' });
     }
     return {
-      accent: this.props.accent ?? '#d4472c',
+      accent: this.props.accent ?? (this.T().accent || '#d4472c'),
       grain: this.props.grain ?? 0.32,
       bgColor: this.T().bg,
       bgGlass: (() => { const h = this.T().bg.replace('#', ''); return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',0.66)'; })(),
