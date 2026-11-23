@@ -1021,7 +1021,7 @@ class Component extends DCLogic {
     this.lensSquash += (sqT - this.lensSquash) * 0.07;
     // type
     // type
-    const size = (112 - 64 * e) * this.LS * (this.T().quiet ? 2.3 : 1);
+    const size = (112 - 64 * e) * this.LS;
     const fam = 'px "Archivo X", "Noto Sans TC", sans-serif';
     const segs = [['800', 'UX / VISUAL / RESEARCH'], ['800', '   ——   '], ['800', 'Yang Zhi Ling'], ['800', '   ——   ']];
     const o = off.getContext('2d');
@@ -1029,6 +1029,16 @@ class Component extends DCLogic {
     o.clearRect(0, 0, CW, CH);
     o.fillStyle = this.T().ink;
     o.textBaseline = 'alphabetic';
+    if (this.T().quiet) {
+      // quiet: a Swiss-poster composition whose words slide between layouts
+      this.drawPoster(o, CW, CH, now, e);
+      const qc = c.getContext('2d');
+      qc.setTransform(1, 0, 0, 1, 0, 0); qc.globalCompositeOperation = 'source-over';
+      qc.clearRect(0, 0, W, H);
+      qc.globalAlpha = 1 - this.smooth(0.35, 0.8, e); qc.drawImage(off, 0, 0); qc.globalAlpha = 1;
+      this.lensDrawn = true;
+      return;
+    }
     const ls = -0.02 * size;
     let unit = 0;
     const ws = segs.map((sg) => {
@@ -1075,46 +1085,6 @@ class Component extends DCLogic {
     }
     o.globalAlpha = 1;
     if ('letterSpacing' in o) o.letterSpacing = '0px';
-    if (this.T().quiet) {
-      // quiet: clean solid type, no glass / fisheye / refraction
-      const qc = c.getContext('2d');
-      qc.setTransform(1, 0, 0, 1, 0, 0); qc.globalCompositeOperation = 'source-over';
-      qc.clearRect(0, 0, W, H);
-      qc.globalAlpha = op;
-      // reeded glass in front of the type: every rib shows a squeezed slice of the words behind it
-      const fl = 1 - this.smooth(0.55, 0.95, e);
-      if (fl < 0.01) { qc.drawImage(off, 0, 0); }
-      else {
-        const R = Math.max(10, Math.round(38 * dpr * (this.MOB ? 0.7 : 1)));
-        const st = Math.max(1, Math.round(dpr));
-        const A = 1.2, SA = Math.sin(A);
-        const mag = 2.4 * fl;
-        for (let x = 0; x < W; x += R) {
-          const w = Math.min(R, W - x), cx = x + w / 2;
-          const persp = (cx - W / 2) * 0.06 * fl;
-          // each rib is a small cylinder lens: columns near its edges look further sideways
-          for (let dx = 0; dx < w; dx += st) {
-            const u = ((dx + st / 2) / w) * 2 - 1;
-            const bend = Math.asin(Math.max(-1, Math.min(1, u * SA))) / A;
-            const sx = cx + persp + bend * (w / 2) * (1 + mag);
-            qc.drawImage(off, sx, 0, st, H, x + dx, 0, st, H);
-          }
-        }
-        // light & shade on the glyphs only: each rib is brighter on its left, darker on its right
-        qc.globalCompositeOperation = 'source-atop';
-        const g = qc.createLinearGradient(0, 0, R, 0);
-        g.addColorStop(0, 'rgba(255,255,255,' + (0.38 * fl).toFixed(3) + ')');
-        g.addColorStop(0.18, 'rgba(255,255,255,0)');
-        g.addColorStop(0.75, 'rgba(0,0,0,0)');
-        g.addColorStop(1, 'rgba(0,0,0,' + (0.28 * fl).toFixed(3) + ')');
-        qc.fillStyle = g;
-        for (let x = 0; x < W; x += R) { qc.save(); qc.translate(x, 0); qc.fillRect(0, 0, R, H); qc.restore(); }
-        qc.globalCompositeOperation = 'source-over';
-      }
-      qc.globalAlpha = 1;
-      this.lensDrawn = true;
-      return;
-    }
     const t = now * 0.001;
     const near = M.on * Math.exp(-Math.pow((M.sy - (TOP + yb - size * 0.35)) / 230, 2)) * (1 - e);
     // pass 1: fluted-glass refraction
@@ -1166,6 +1136,82 @@ class Component extends DCLogic {
     }
     if (!window.__noglass) this.glassify(ctx, W, H, dpr, TOP, now);
     this.lensDrawn = true;
+  };
+
+  // ---- quiet hero: words of a typographic poster that re-arrange themselves ----
+  POSTER = {
+    words: [
+      { t: 'UX /', k: 'big' }, { t: 'Visual /', k: 'big' }, { t: 'Research', k: 'big' },
+      { t: 'Yang Zhi Ling', k: 'mid' }, { t: '楊芷翎', k: 'cn' }, { t: '2026', k: 'grey' }, { t: 'PORTFOLIO — RECEIPT OF WORK', k: 'mono' }
+    ],
+    // [align, x, baseline y] per word, per layout
+    desk: [
+      [['l', 60, 150], ['l', 60, 262], ['l', 60, 374], ['r', 1380, 132], ['r', 1380, 190], ['r', 1380, 374], ['r', 1380, 262]],
+      [['r', 1380, 374], ['l', 60, 150], ['r', 1380, 262], ['l', 60, 322], ['l', 60, 374], ['l', 540, 150], ['l', 60, 214]],
+      [['l', 60, 374], ['r', 1380, 150], ['l', 540, 262], ['r', 1380, 322], ['r', 1380, 374], ['l', 60, 150], ['r', 1380, 214]]
+    ],
+    mob: [
+      [['l', 20, 120], ['l', 20, 186], ['l', 20, 252], ['r', 410, 316], ['r', 410, 352], ['l', 20, 330], ['r', 410, 392]],
+      [['r', 410, 252], ['l', 20, 120], ['r', 410, 186], ['l', 20, 316], ['l', 20, 352], ['r', 410, 120], ['l', 20, 392]],
+      [['r', 410, 120], ['l', 20, 252], ['l', 20, 186], ['r', 410, 316], ['r', 410, 352], ['l', 20, 120], ['r', 410, 392]]
+    ]
+  };
+  drawPoster = (o, CW, CH, now, e) => {
+    const P = this.POSTER, L = this.MOB ? P.mob : P.desk, n = L.length;
+    const ra = this.revealAge(now);
+    const k = this.MOB ? 0.52 : 1;
+    const font = (w) => w.k === 'big' || w.k === 'grey' ? '500 ' + (112 * k) + 'px "Inter Tight", "Noto Sans TC", sans-serif'
+      : w.k === 'mid' ? '500 ' + (54 * k) + 'px "Inter Tight", sans-serif'
+      : w.k === 'cn' ? '500 ' + (34 * k) + 'px "Noto Sans TC", sans-serif'
+      : '500 ' + (13 * Math.max(0.85, k)) + 'px "IBM Plex Mono", monospace';
+    const ink = this.T().ink;
+    // timeline: hold, move, hold, move ... and after each full round, zoom out into a tiled grid and back
+    const hold = 2.2, move = 1.1, step = hold + move;
+    const round = n * step, zoomT = 2.6, cyc = round + zoomT;
+    const tt = Math.max(0, ra - 1.4);
+    const tc = tt % cyc;
+    const ease = (x) => x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
+    let z = 1;
+    if (tc > round) { const q = (tc - round) / zoomT; z = 1 - 0.64 * Math.sin(Math.PI * Math.min(1, q)) ** 0.7; }
+    const li = Math.min(n - 1, Math.floor(Math.min(tc, round - 0.0001) / step));
+    const inStep = Math.min(tc, round - 0.0001) - li * step;
+    const words = P.words;
+    const pos = [];
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
+      o.font = font(w);
+      if ('letterSpacing' in o) o.letterSpacing = (w.k === 'mono' ? 1.5 : -0.02 * (w.k === 'big' || w.k === 'grey' ? 112 * k : 54 * k)) + 'px';
+      const wd = o.measureText(w.t).width;
+      const a = L[li][i], b = L[(li + 1) % n][i];
+      const xa = a[0] === 'r' ? a[1] - wd : a[1], xb = b[0] === 'r' ? b[1] - wd : b[1];
+      const p = ease(Math.max(0, Math.min(1, (inStep - hold - i * 0.06) / (move - 0.36))));
+      pos.push([w, xa + (xb - xa) * p, a[2] + (b[2] - a[2]) * p]);
+    }
+    const drawAll = (ox, oy, alpha) => {
+      for (let i = 0; i < pos.length; i++) {
+        const [w, x, y] = pos[i];
+        const rin = Math.max(0, Math.min(1, (ra - 0.95 - i * 0.07) / 0.7));
+        if (rin <= 0) continue;
+        o.globalAlpha = alpha * rin;
+        o.font = font(w);
+        if ('letterSpacing' in o) o.letterSpacing = (w.k === 'mono' ? 1.5 : -0.02 * (w.k === 'big' || w.k === 'grey' ? 112 * k : 54 * k)) + 'px';
+        o.fillStyle = w.k === 'grey' ? 'rgba(27,27,26,0.38)' : w.k === 'mono' ? 'rgba(27,27,26,0.6)' : ink;
+        o.fillText(w.t, ox + x, oy + y + (1 - rin) * 40);
+      }
+    };
+    o.save();
+    if (z < 0.999) {
+      o.translate(CW / 2, CH / 2); o.scale(z, z); o.translate(-CW / 2, -CH / 2);
+      const nx = Math.ceil((1 / z - 1) / 2) + 1, ny = Math.ceil((1 / z - 1) / 2) + 1;
+      for (let gy = -ny; gy <= ny; gy++) for (let gx = -nx; gx <= nx; gx++) {
+        if (gx === 0 && gy === 0) continue;
+        drawAll(gx * CW, gy * CH, 0.9);
+      }
+    }
+    drawAll(0, 0, 1);
+    o.restore();
+    o.globalAlpha = 1; o.fillStyle = ink;
+    if ('letterSpacing' in o) o.letterSpacing = '0px';
   };
 
   // turn the solid text mask on ctx into liquid glass: refracted, frosted backdrop + light rims + soft shadow
